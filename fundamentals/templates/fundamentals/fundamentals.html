@@ -1,0 +1,38 @@
+{% extends 'website/base.html' %}
+
+{% block searchbar %}
+    <div id="fund_search">
+        <form id="ticker_search" method="get" action="#">
+            {% csrf_token %}
+            {% search_form.as_table %}
+            <button type="submit" id="fund_searchbutton" name="ticker" value="{{ ticker }}">
+                Search
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="fund_baseinfo">
+        {% include 'fundamentals/_base_info.html' %}
+    </div>
+    <div id="fund_finstatements">
+        {% include 'fundamentals/_fin_statements.html' %}
+    </div>
+    <div id="fund_holders">
+        {% include 'fundamentals/_holders.html' %}
+    </div>
+    <div id="fund_esginfo">
+        {% include 'fundamentals/_esg_info.html' %}
+    </div>
+    <div id="fund_pricehistory">
+        {% include 'fundamentals/_price_history.html' %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+{% endblock %}

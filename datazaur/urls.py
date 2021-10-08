@@ -20,14 +20,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('website.urls'), name='website'),
     path('markets/', include('markets.urls'), name='markets'),
+    path('macro/', include('macro.urls'), name='macro'),
     path('trading/', include('trading.urls'), name='trading'),
     path('crypto/', include('crypto.urls'), name='crypto'),
-    path('forex/', include('forex.urls'), name='forex'),
     path('watchlist/', include('watchlist.urls'), name='watchlist'),
-    path('portfolio/', include('portfolio.urls'), name='portfolio'),
     path('news/', include('news.urls'), name='news'),
-    path('messenger/', include('messenger.urls'), name='messenger'),
-    path('trends/', include('trends.urls'), name='trends'),
-    path('macro/', include('macro.urls'), name='macro'),
+    path('social/', include('social.urls'), name='social'),
+
 ]
 
