@@ -1,0 +1,15 @@
+
+<form id="add_coin_form" method="post" action="#">
+    {% csrf_token %}
+    <h4>
+        Add coin
+    </h4>
+    <select id="add_coin_dropdown">
+        {% for coin in coins %}
+            <option id="{{ coin.0 }}" value="{{ coin.0 }}"> {{ coin.1 }} </option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="selected_coin" id="selected_coin">
+    <button id="add_coin_button" name="add_coin" type="submit" value="save" onclick="addCoinNotification()"> Add </button>
+</form>
+

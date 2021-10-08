@@ -1,0 +1,34 @@
+{% extends 'website/base.html' %}
+
+{% block navbar %}
+{% include 'forex/_fx_navbar.html' %}
+{% endblock %}
+
+
+{% block content %}
+
+<div id="converter">
+<input type="text" id="base_currency" placeholder="Amount">
+<select type="" id="base_currency" placeholder="Amount">
+</div>
+
+<div id="historical_rates">
+
+
+</div>
+<div id="fx_table">
+    {{ table |safe}}
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+
+
+
+
+
+
+

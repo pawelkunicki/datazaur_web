@@ -1,0 +1,67 @@
+
+<table id="watchlist_table">
+    <thead>
+        <tr>
+            <th>
+                Symbol
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                1h Δ
+            </th>
+            <th>
+                24h Δ
+            </th>
+            <th>
+                7d Δ
+            </th>
+            <th>
+                Market cap
+            </th>
+            <th>
+                <form method="POST" id="del_from_watchlist_form">
+                    {% csrf_token %}
+                    <input type="hidden" name="checked_symbols" id="checked_symbols">
+                    <button type="submit" id="delete_from_watchlist" onclick="findChecked()">
+                        Delete
+                    </button>
+                </form>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for coin in watchlist_coins %}
+        <tr>
+            <td>
+                {{ coin.coin.symbol }}
+            </td>
+            <td>
+                {{ coin.coin.name }}
+            </td>
+            <td>
+                #price
+            </td>
+            <td>
+                1h Δ
+            </td>
+            <td>
+                24h Δ
+            </td>
+            <td>
+                7d Δ
+            </td>
+            <td>
+                m cap
+            </td>
+            <td>
+                <input type="checkbox" id="{{ coin.coin.id }}">
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

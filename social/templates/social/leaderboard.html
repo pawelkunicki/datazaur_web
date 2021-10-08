@@ -1,0 +1,18 @@
+{% extends 'website/base.html' %}
+
+{% block content %}
+<div id="top_traders">
+    {% include 'leaderboard/_top_traders.html' %}
+</div>
+<div id="top_strategies">
+    {% include 'leaderboard/_top_strategies.html' %}
+</div>
+<div id="top_assets">
+    {% include 'leaderboard/_top_assets.html'%}
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+

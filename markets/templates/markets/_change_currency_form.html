@@ -1,0 +1,14 @@
+
+<form id="change_currency_form" method="post" action="#" onclick="">
+    {% csrf_token %}
+    <h4> Change currency </h4>
+    <select id="change_currency_dropdown">
+        {% for currency in currencies %}
+            <option id="{{ currency.0 }}" value="{{ currency.0 }}"> {{ currency.1 }} </option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="selected_currency" id="selected_currency">
+    <button id="change_currency" name="change_currency" type="submit" value="save"> Save </button>
+</form>
+
+

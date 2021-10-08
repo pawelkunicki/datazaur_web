@@ -1,0 +1,34 @@
+{% extends 'website/base.html' %}
+
+{% block navbar %}
+{% include 'forex/_fx_navbar.html' %}
+{% endblock %}
+
+
+{% block content %}
+<div id="converter">
+
+</div>
+
+<div id="historical_rates">
+
+
+</div>
+<div id="fx_table">
+    {{ table |safe}}
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

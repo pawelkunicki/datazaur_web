@@ -1,0 +1,29 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block navbar %}
+    {% include 'crypto/_crypto_navbar.html' %}
+{% endblock %}
+
+<div id="exchanges_top_bar">
+    {% block topbar %}
+        {% include 'website/_search_box.html' %}
+        <form id="save_fav_exchanges_form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="fav_exchanges" id="fav_exchanges">
+            <button type="submit" id="save_fav_exchanges"> Save favourites </button>
+        </form>
+    {% endblock %}
+</div>
+
+{% block content %}
+<div id="exchanges_table">
+    {{ table |safe }}
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/addFavouritesColumn.js' %}" type="text/javascript">
+</script>
+<script src="{% static 'js/filterResults.js' %}" type="text/javascript"></script>
+{% endblock %}
