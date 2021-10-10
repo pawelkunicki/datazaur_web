@@ -1,0 +1,50 @@
+{% extends 'website/base.html' %}
+
+{% block navbar %}
+
+{% endblock %}
+
+{% block searchbar %}
+
+{% endblock %}
+
+{% block content %}
+
+<div id="crypto_col">
+    <h2>
+        Cryptocurrencies
+    </h2>
+    {% include 'markets/_prices_column.html' with symbols=coins %}
+</div>
+<div id="fx_col">
+    <h2>
+        Forex
+    </h2>
+    {% include 'markets/_prices_column.html' with symbols=currencies %}
+</div>
+<div id="indices_col">
+    <h2>
+        Indices
+    </h2>
+    {% include 'markets/_prices_column.html' with symbols=indices %}
+</div>
+<div id="bonds_col">
+    <h2>
+        Bond Yields
+    </h2>
+    {% include 'markets/_prices_column.html' with symbols=bonds %}
+</div>
+
+<div id="commodities_col">
+    <h2>
+        Commodities
+    </h2>
+    {% include 'markets/_prices_column.html' with symbols=commodities %}
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

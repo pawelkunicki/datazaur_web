@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from .forms import AddFXTicker
 from utils.fx_monitor import *
+from utils.crypto_monitor import *
+from utils.markets_monitor import *
 from utils.portfolio_value import get_portfolio_value
 from website.models import UserProfile
 from markets.models import Currency
@@ -15,7 +17,27 @@ from markets.models import Currency
 
 
 def markets(request):
-    context={}
+    context = {}
+
+    rates_df = pd.DataFrame(get_rates(currency))
+    col_name = rates_df.columns[0]
+    rates_df = rates_df[rates_df[col_name] != 1]
+    rates = [(i, v[col_name]) for i, v in rates_df.iterrows()]
+
+    coins_df = coins_by_mcap().loc[:20, ['Symbol', 'Price', '24h Δ']]
+    coins = [(v['Symbol'], v['Price'], v['24h Δ']) for i, v in coins_df.iterrows()]
+
+    indices_df = get_indices_table()
+    indices_df['24h Δ'] = indices_df['24h Δ'].apply(color_prices)
+    indices = [(v['Index'], v['Price'], v['24h Δ']) for i, v in indices_df.iterrows()]
+
+    bonds_df = get_bonds_table('10Y')
+
+
+    context['indices'] = indices
+    context['currencies'] = rates
+    context['coins'] = coins
+    context['bonds'] = bonds_df
 
 
     return render(request, 'markets/markets.html', context)
@@ -28,7 +50,6 @@ def crypto(request):
 
 
 def forex(request):
-
     if request.method == 'GET':
         print('get')
         print(request.GET)
@@ -39,10 +60,16 @@ def forex(request):
         else:
             currency = settings.DEFAULT_CURRENCY
 
-        rates = pd.DataFrame(get_rates(currency))[1:]
-        print(SORTED_CURRENCIES)
-        rates.columns = [currency]
-        context = {'currency': currency, 'currencies': SORTED_CURRENCIES, 'rates': rates.to_html(), 'add_ticker': AddFXTicker()}
+        rates_df = pd.DataFrame(get_rates(currency))
+        col_name = rates_df.columns[0]
+        rates_df = rates_df[rates_df[col_name] != 1]
+        rates = [(i, v[col_name]) for i, v in rates_df.iterrows()]
+
+        currencies = list(rates_df.index.values)
+        if currency in currencies:
+            currencies.remove(currency)
+        currencies.insert(0, currency)
+        context = {'currencies': currencies, 'rates': rates, 'add_ticker': AddFXTicker()}
         return render(request, 'markets/forex.html', context)
 
     elif request.method == 'POST':

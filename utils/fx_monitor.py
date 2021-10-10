@@ -16,7 +16,10 @@ def get_rates(currency=CURRENCY):
         fx_rates = pd.Series(rates.get_rates(currency))
     else:
         fx_rates = pd.read_csv(FILE, index_col=0).iloc[0, :]
-    return fx_rates
+        if fx_rates.index[0] == currency:
+            return fx_rates
+        else:
+            return pd.Series(rates.get_rates(currency)).astype(float).round(4)
 
 
 def get_forex_matrix(currency=CURRENCY):

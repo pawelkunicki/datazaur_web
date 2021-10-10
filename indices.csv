@@ -1,0 +1,35 @@
+,Country,Index,Price,24h Δ
+0,united states,S&P 500,4391.36,-0.19
+1,united states,Nasdaq,14579.5,-0.51
+2,canada,S&P/TSX,20416.31,0.0
+3,mexico,FTSE BIVA Real Time Price,1055.53,0.54
+4,germany,DAX,15206.13,-0.29
+5,united kingdom,FTSE 100,7095.55,0.25
+6,france,CAC 40,6559.99,-0.61
+7,italy,FTSE Italia All Share,28548.38,0.19
+8,spain,IBEX 35,8955.0,-0.09
+9,portugal,PSI 20,5514.79,-0.29
+10,netherlands,AEX,772.05,-0.66
+11,belgium,BEL 20,4145.07,-0.18
+12,norway,OSE Benchmark,1167.35,0.53
+13,sweden,OMXS30,2240.22,-0.78
+14,finland,OMX Helsinki 25,5366.48,0.26
+15,poland,WIG20,2411.12,2.19
+16,russia,MOEX,4238.0,0.24
+17,china,Shanghai,3592.17,0.67
+18,china,SZSE Component,14414.16,0.73
+19,china,China A50,15816.73,2.13
+20,japan,Nikkei 225,28048.94,1.34
+21,japan,JASDAQ,186.05,1.0
+22,south korea,KOSPI,2956.3,-0.11
+23,hong kong,Hang Seng,24837.85,0.55
+24,singapore,FTSE Singapore,324.26,0.3
+25,india,BSE Sensex,60059.06,0.64
+26,turkey,BIST 100,1398.0,0.08
+27,taiwan,Taiwan Weighted,16640.43,-0.44
+28,thailand,SET,1639.41,0.35
+29,australia,S&P/ASX 200,7320.1,0.87
+30,new zealand,NZX 50,13086.6,-0.38
+31,brazil,Bovespa,112833.0,2.03
+32,argentina,S&P Merval,77553.31,0.14
+33,chile,S&P CLX IPSA,4145.62,0.39

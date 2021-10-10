@@ -1,9 +1,10 @@
 import pandas as pd
 import numpy as np
+import os
 import requests
 import json
 from django.conf import settings
-
+from utils.compare_timestamps import *
 
 
 coins_file = settings.CRYPTO_FILE
@@ -21,6 +22,13 @@ def get_coins_info():
                                                                        'BlockReward', 'AssetWebsiteUrl',
                                                                        'IsUsedInDefi', 'IsUsedInNft']]
     return data
+
+def get_coins_data():
+    if coins_file not in os.listdir() or not compare_timestamps(300, coins_file):
+        return coins_by_mcap()
+    else:
+        return pd.read_csv(coins_file, index_col=0)
+
 
 def coins_by_mcap():
     url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={currency}&api_key={api_key}'

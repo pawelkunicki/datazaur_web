@@ -6,16 +6,14 @@
 
 
 {% block content %}
-<script type="text/javascript">
-    const currencies = "{{ currencies }}";
-</script>
-<script src="{% static 'js/changeFXCurrency.js' %}" type="text/javascript"></script>
+
+
 <div id="fx_rates">
     <h3>
         FX Rates
     </h3>
 
-    {{ rates |safe}}
+    {% include 'markets/_fx_table.html' %}
 
     <form id="add_ticker" method="post" action="#">
         <h3>
@@ -41,6 +39,7 @@
 {% endblock %}
 
 {% block js %}
-
+<script src="{% static 'js/changeFXCurrency.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/invertFX.js' %}" type="text/javascript"></script>
 {% endblock %}
 
