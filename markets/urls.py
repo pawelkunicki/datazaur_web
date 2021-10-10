@@ -9,6 +9,7 @@ urlpatterns = [
     path('crypto/', crypto, name='crypto'),
     path('indices/', views.indices, name='indices'),
     path('forex/', views.forex, name='forex'),
+    path('forex_matrix/', views.forex_matrix, name='forex_matrix'),
     path('bonds/', views.bonds, name='bonds'),
     path('stocks/', views.stocks, name='stocks'),
     path('commodities/', views.commodities, name='commodities'),

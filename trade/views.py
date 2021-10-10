@@ -72,7 +72,7 @@ def trade(request):
 
 
 
-    return render(request, 'trading/trading.html', context)
+    return render(request, 'trade/trade.html', context)
 
 
 def algorithms(request):

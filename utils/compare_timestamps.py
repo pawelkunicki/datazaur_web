@@ -1,13 +1,12 @@
 import datetime
 import os
-from django.conf import settings
+
 
 def compare_timestamps(refresh_rate=60, file=None):
-    now = datetime.datetime.now().timestamp()
-    if file in os.listdir() and now - os.path.getmtime(file) < refresh_rate:
-        return True
-    else:
-        return False
+    return file in os.listdir() and datetime.datetime.now().timestamp() - os.path.getmtime(file) < refresh_rate
 
+
+def compare_dates(file):
+    return file in os.listdir() and datetime.datetime.fromtimestamp(os.path.getmtime(file)).day == datetime.datetime.now().day
 
 

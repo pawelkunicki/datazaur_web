@@ -4,27 +4,24 @@ from django.contrib.auth.models import User
 from watchlist.models import Watchlist
 
 from markets.models import Currency
-from utils.fx_monitor import ForexMonitor
+from utils.fx_monitor import *
 from crypto.models import Cryptocurrency, Exchange
 from utils.crypto_monitor import *
 from django.conf import settings
 
-
+FX_FILE = 'static/data/iso-4217-currency-codes.csv'
 
 def setup_fx_db():
+    currency = settings.DEFAULT_CURRENCY
     currencies = settings.SORTED_CURRENCIES
-    codes = pd.read_csv(settings.FX_FILE)
+    codes = pd.read_csv(FX_FILE)
     codes.drop_duplicates(subset=['Alphabetic_Code'], inplace=True, keep='first')
     codes.set_index('Alphabetic_Code', inplace=True)
     for curr in currencies:
         currency = Currency.objects.create(symbol=curr, name=codes.loc[curr, 'Currency'], country=codes.loc[curr, 'Entity'])
         currency.save()
 
-    fx_file = settings.FX_FILE
-    if fx_file not in os.listdir():
-        monitor = ForexMonitor()
-        fx_rates = monitor.get_rates()
-        pd.DataFrame(fx_rates).to_csv(fx_file)
+
 
 
 

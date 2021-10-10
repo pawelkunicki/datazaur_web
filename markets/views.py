@@ -6,9 +6,11 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 import datetime
-from utils.fx_monitor import ForexMonitor
+from .forms import AddFXTicker
+from utils.fx_monitor import *
 from utils.portfolio_value import get_portfolio_value
 from website.models import UserProfile
+from markets.models import Currency
 # Create your views here.
 
 
@@ -24,17 +26,36 @@ def crypto(request):
 
     return render(request, 'markets/crypto.html', context)
 
+
 def forex(request):
-    today = datetime.datetime.today()
-    FX = ForexMonitor()
-    FX.sorted_currencies = settings.SORTED_CURRENCIES
-    table = FX.get_forex_matrix()
-    rates = table.iloc[0, :]
+
+    if request.method == 'GET':
+        print('get')
+        print(request.GET)
+        if 'currency' in str(request.GET):
+            currency = request.GET['currency']
+        elif request.user.is_authenticated and UserProfile.objects.filter(user=request.user).currency.exists():
+            currency = UserProfile.objects.filter(user=request.user).first().currency.symbol
+        else:
+            currency = settings.DEFAULT_CURRENCY
+
+        rates = pd.DataFrame(get_rates(currency))[1:]
+        print(SORTED_CURRENCIES)
+        rates.columns = [currency]
+        context = {'currency': currency, 'currencies': SORTED_CURRENCIES, 'rates': rates.to_html(), 'add_ticker': AddFXTicker()}
+        return render(request, 'markets/forex.html', context)
+
+    elif request.method == 'POST':
+        if 'add_ticker' in str(request.POST):
+            form = AddFXTicker(request.POST)
+            if form.is_valid():
+                form_data = form.cleaned_data
 
 
 
-    context = {'currencies': FX.sorted_currencies, 'table': table.to_html()}
-
+def forex_matrix(request):
+    table = get_forex_matrix()
+    context = {'currencies': SORTED_CURRENCIES, 'table': table.to_html()}
     return render(request, 'markets/forex_matrix.html', context)
 
 def indices(request):
@@ -88,8 +109,11 @@ def trends(request):
         context['gainers_table'] = gainers.to_html(justify='center', escape=False)
         context['losers_table'] = losers.to_html(justify='center', escape=False)
 
-        return render(request, 'trends/trends.html', context)
+        return render(request, 'markets/trends.html', context)
 
     elif request.method == 'POST':
         pass
-        return render(request, 'trends/trends.html', context)
+        return render(request, 'markets/trends.html', context)
+
+
+

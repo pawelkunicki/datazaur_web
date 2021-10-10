@@ -9,7 +9,7 @@ from watchlist.models import Watchlist
 
 class UserProfile(models.Model):
     user = models.ForeignKey('auth.User', related_name='userprofile_user', on_delete=models.CASCADE)
-    currency = models.ForeignKey('markets.Currency', on_delete=models.CASCADE, related_name='myuser_currency', null=True,
+    currency = models.ForeignKey('markets.Currency', on_delete=models.CASCADE, related_name='userprofile_currency', null=True,
                                  blank=True)
     portfolio = models.ForeignKey('watchlist.Portfolio', related_name='userprofile_portfolio', on_delete=models.CASCADE, null=True, blank=True)
     watchlist = models.ForeignKey('watchlist.Watchlist', related_name='userprofile_watchlist', on_delete=models.CASCADE, null=True, blank=True)

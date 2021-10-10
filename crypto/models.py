@@ -50,7 +50,6 @@ class Ticker(models.Model):
     bid_price = models.FloatField(default=0)
     ask_price = models.FloatField(default=0)
 
-
     hourly_change = models.FloatField(default=0)
     daily_change = models.FloatField(default=0)
     weekly_change = models.FloatField(default=0)
