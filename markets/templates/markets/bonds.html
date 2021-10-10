@@ -1,0 +1,27 @@
+{% extends 'website/base.html' %}
+
+{% block navbar %}
+    {% include 'website/_base_navbar.html' with
+{% endblock %}
+
+{% block searchbar %}
+
+{% endblock %}
+
+
+{% block content %}
+    {% for country, table in countries.items %}
+    <div class="yields_col">
+        <h2>
+            {{ country }}
+        </h2>
+        {{ table |safe}}
+    </div>
+    {% endfor %}
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

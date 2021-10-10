@@ -97,6 +97,8 @@ def stocks(request):
 
 def bonds(request):
     context = {}
+    context['countries'] = get_yield_curves()
+    print(context)
 
     return render(request, 'markets/bonds.html', context)
 

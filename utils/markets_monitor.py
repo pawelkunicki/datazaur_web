@@ -3,7 +3,7 @@ from utils.compare_timestamps import *
 import investpy
 import pandas as pd
 import datetime
-
+from static.data.default_countries import DEFAULT_COUNTRIES
 from static.data.default_indices import GENERAL_INDICES
 
 def check_indices_files():
@@ -69,4 +69,21 @@ def find_last_day(today):
     else:
         return 1
 
+
+
+def get_yield_curves():
+    result = {}
+    countries = DEFAULT_COUNTRIES
+    for country in countries:
+        try:
+            data = investpy.get_bonds_overview(country)[['name', 'last', 'change']]
+            data.columns = ['Bond', 'Yield', '24h Δ']
+            result[country] = data.to_html()
+            print(result)
+        except Exception as e:
+            print(f'error {e}')
+
+    print(result)
+    #pd.DataFrame(result).to_csv('yield_curves.csv')
+    return result
 
