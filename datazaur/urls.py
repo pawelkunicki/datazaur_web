@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('website.urls'), name='website'),
@@ -24,8 +26,8 @@ urlpatterns = [
     path('trading/', include('trading.urls'), name='trading'),
     path('crypto/', include('crypto.urls'), name='crypto'),
     path('watchlist/', include('watchlist.urls'), name='watchlist'),
+    path('messenger/', include('messenger.urls'), name='messenger'),
     path('news/', include('news.urls'), name='news'),
     path('social/', include('social.urls'), name='social'),
 
 ]
-

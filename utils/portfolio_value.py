@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 from forex_python.converter import CurrencyRates
-from crypto.crypto_monitor import *
+from utils.crypto_monitor import *
 from utils.compare_timestamps import compare_timestamps
 from django.conf import settings
 
@@ -20,8 +20,8 @@ def get_crypto_value(coin, quote, amount):
     currency = settings.DEFAULT_CURRENCY
     refresh_rate = settings.REFRESH_RATE
     if coins_file not in os.listdir() or not compare_timestamps(refresh_rate, coins_file):
-        monitor = CryptoMonitor()
-        c = monitor.coins_by_mcap()
+
+        c = coins_by_mcap()
     coins = pd.read_csv(coins_file, index_col=0)
 
     if currency != quote:
