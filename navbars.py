@@ -27,6 +27,7 @@ MAIN_NAVBAR = (
 
 NAVBAR_MARKETS = (
                ("Home", "{% static 'website/home.html' %}"),
+               ("Markets", "{% static 'markets/markets.html' %}"),
                ("Crypto", "{% static 'crypto/crypto.html' %}"),
                ("Forex", "{% static 'markets/forex.html' %}"),
                ("Indices", "{% static markets/indices.html' %}"),

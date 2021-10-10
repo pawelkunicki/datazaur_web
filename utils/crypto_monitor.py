@@ -51,6 +51,8 @@ def add_hyperlinks(df):
 
 
 def color_prices(x):
+    if type(x) == str:
+        x = float(x.replace('%', '').replace(',', '.'))
     return f"""<p class=green>{x}%</p>""" if x >= 0 else f"""<p class=red>{x}%</p>"""
 
 
@@ -66,6 +68,7 @@ def prepare_df_display(df, cols_to_split, upd_col, round_decimals):
     if upd_col:
         df['Updated'] = df['Updated'].apply(lambda x: pd.to_datetime(x * 10 ** 9))
     return df
+
 
 def prepare_df_save(df):
     df.columns = ['Symbol', 'Name', 'Url', 'Price', '1h Δ', '24h Δ', '24h vol', f'Market cap ({currency})',

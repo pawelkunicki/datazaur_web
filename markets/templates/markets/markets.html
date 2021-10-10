@@ -1,47 +1,52 @@
 {% extends 'website/base.html' %}
 
 {% block navbar %}
-
+    {% include 'website/_base_navbar.html' with items=navbar %}
 {% endblock %}
 
 {% block searchbar %}
-
+    <h2>
+        Yp
+    </h2>
 {% endblock %}
 
 {% block content %}
+<div id="all_markets">
+    <div id="crypto_col" class="market_col">
+        <h2>
+            Crypto
+        </h2>
+        {{ coins |safe }}
+    </div>
 
-<div id="crypto_col">
-    <h2>
-        Cryptocurrencies
-    </h2>
-    {% include 'markets/_prices_column.html' with symbols=coins %}
-</div>
-<div id="fx_col">
-    <h2>
-        Forex
-    </h2>
-    {% include 'markets/_prices_column.html' with symbols=currencies %}
-</div>
-<div id="indices_col">
-    <h2>
-        Indices
-    </h2>
-    {% include 'markets/_prices_column.html' with symbols=indices %}
-</div>
-<div id="bonds_col">
-    <h2>
-        Bond Yields
-    </h2>
-    {% include 'markets/_prices_column.html' with symbols=bonds %}
-</div>
+    <div id="fx_col" class="market_col">
+        <h2>
+            Forex
+        </h2>
+        {{ currencies |safe }}
+    </div>
+    <div id="indices_col" class="market_col">
+        <h2>
+            Indices
+        </h2>
+        {{ indices |safe }}
+    </div>
+    <div id="bonds_col" class="market_col">
+        <h2>
+            Yields
+        </h2>
+        {{ bonds |safe }}
+    </div>
 
-<div id="commodities_col">
-    <h2>
-        Commodities
-    </h2>
-    {% include 'markets/_prices_column.html' with symbols=commodities %}
-</div>
+    <div id="commodities_col" class="market_col">
+        <h2>
+            Commodities
+        </h2>
+        {{ commodities |safe }}
+    </div>
 
+
+</div>
 
 {% endblock %}
 

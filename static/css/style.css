@@ -283,8 +283,9 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 #windows_link{float:right; padding: 80px}
 
 td a{color:#04b}
-table{border:1px; padding:5px}
-td{padding: 10px; margin:auto; justify:center}
+th{justify:center}
+table{border:1px; padding:10px}
+td{padding: 10px; margin:auto; justify:center; border:1px solid black}
 body {width:100%; height:100%}
 html {min-width: 550px}
 
@@ -368,5 +369,5 @@ canvas{height: 1200px; width: 800px}
 .search_result_name a{justify:center; text-align:center; align-vertical:center; font-size:18px}
 
 
-
-
+#all_markets{height: 100%; width: 100%; display: inline-block; padding:10px 10px; vertical-align: top}
+.market_col{height: 100%; width: 300px; display:inline-block; vertical-align: top; horizontal-align:space-between}

@@ -7,6 +7,7 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 import datetime
 from .forms import AddFXTicker
+from navbars import *
 from utils.fx_monitor import *
 from utils.crypto_monitor import *
 from utils.markets_monitor import *
@@ -16,37 +17,45 @@ from markets.models import Currency
 # Create your views here.
 
 
+
 def markets(request):
     context = {}
+
+    if request.user.is_authenticated:
+        context['navbar'] = NAVBAR_MARKETS + NAVBAR_SUFFIX_AUTHED
+    else:
+        context['navbar'] = NAVBAR_MARKETS + NAVBAR_SUFFIX_UNAUTHED
 
     rates_df = pd.DataFrame(get_rates(currency))
     col_name = rates_df.columns[0]
     rates_df = rates_df[rates_df[col_name] != 1]
-    rates = [(i, v[col_name]) for i, v in rates_df.iterrows()]
 
-    coins_df = coins_by_mcap().loc[:20, ['Symbol', 'Price', '24h Δ']]
-    coins = [(v['Symbol'], v['Price'], v['24h Δ']) for i, v in coins_df.iterrows()]
+    coins_df = coins_by_mcap().iloc[:30, [1, 3, 5]]
 
     indices_df = get_indices_table()
     indices_df['24h Δ'] = indices_df['24h Δ'].apply(color_prices)
-    indices = [(v['Index'], v['Price'], v['24h Δ']) for i, v in indices_df.iterrows()]
 
     bonds_df = get_bonds_table('10Y')
+    bonds_df['24h Δ'] = bonds_df['24h Δ'].apply(color_prices)
+
+    commodities_df = get_commodities()
+    #commodities_df['24h Δ'] = commodities_df['24h Δ'].apply(color_prices)
+
+    context['indices'] = indices_df.to_html(escape=False)
+    context['currencies'] = rates_df.to_html(escape=False)
+    context['coins'] = coins_df.to_html(escape=False)
+    context['bonds'] = bonds_df.to_html(escape=False)
+    context['commodities'] = commodities_df.to_html(escape=False)
 
 
-    context['indices'] = indices
-    context['currencies'] = rates
-    context['coins'] = coins
-    context['bonds'] = bonds_df
+    price_headers = ('Instrument', 'Price', '24h Δ')
+    context['headers'] = {'indices': price_headers, 'currencies': price_headers, 'coins': price_headers,
+                          'commodities': ('Name', 'Price', '24h Δ'), 'stocks': price_headers, 'funds': price_headers,
+                          'etfs': price_headers, 'bonds': ('Bond', 'Yield', '24h Δ')}
 
 
     return render(request, 'markets/markets.html', context)
 
-
-def crypto(request):
-    context = {}
-
-    return render(request, 'markets/crypto.html', context)
 
 
 def forex(request):
@@ -97,6 +106,12 @@ def stocks(request):
 
 def bonds(request):
     context = {}
+    if request.user.is_authenticated:
+        navbar = NAVBAR_MARKETS + NAVBAR_SUFFIX_AUTHED
+    else:
+        navbar = NAVBAR_MARKETS + NAVBAR_SUFFIX_AUTHED
+
+    context['navbar'] = navbar
     context['countries'] = get_yield_curves()
     print(context)
 
@@ -143,6 +158,39 @@ def trends(request):
     elif request.method == 'POST':
         pass
         return render(request, 'markets/trends.html', context)
+
+
+
+def funds(request):
+    context = {}
+
+
+    return render(request, 'markets/funds.html', context)
+
+
+
+
+def etfs(request):
+    context = {}
+
+
+    return render(request, 'markets/etfs.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

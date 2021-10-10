@@ -1,0 +1,39 @@
+,country,name,last,last_close,change_percentage,currency
+0,,Gold,1757.25,1759.2,-0.11%,USD
+1,united states,Copper,4.28,4.24,+0.85%,USD
+2,,Silver,22.68,22.66,+0.10%,USD
+3,united states,Palladium,2067.0,1955.0,+5.73%,USD
+4,united states,Platinum,1027.75,985.3,+4.31%,USD
+5,united kingdom,Aluminum,2961.0,2943.25,+0.60%,USD
+6,united kingdom,Zinc,3165.25,3058.75,+3.48%,USD
+7,united kingdom,Lead,2223.25,2184.25,+1.79%,USD
+8,united kingdom,Nickel,19175.0,18377.5,+4.34%,USD
+9,united kingdom,Tin,36192.5,35257.5,+2.65%,USD
+10,united kingdom,Copper,9348.0,9302.25,+0.49%,USD
+11,united states,US Coffee C,200.7,197.9,+1.41%,USD
+12,united states,US Cotton #2,110.46,111.61,-1.03%,USD
+13,united states,US Sugar #11,20.29,19.84,+2.27%,USD
+14,united states,Orange Juice,127.8,128.4,-0.47%,USD
+15,united states,US Cocoa,2757.5,2726.0,+1.16%,USD
+16,united kingdom,London Coffee,2119.0,2117.0,0.00%,USD
+17,united kingdom,London Cocoa,1886.0,1863.0,+1.23%,GBP
+18,united kingdom,London Sugar,519.7,510.5,+1.80%,USD
+19,united states,Lumber,719.9,676.7,+6.38%,USD
+20,united states,Live Cattle,125.57,125.28,+0.24%,USD
+21,united states,Lean Hogs,90.25,89.85,+0.45%,USD
+22,united states,Feeder Cattle,159.49,156.8,+1.72%,USD
+23,united kingdom,Brent Oil,82.54,81.95,+0.72%,USD
+24,united states,Crude Oil WTI,79.58,78.3,+1.63%,USD
+25,united kingdom,London Gas Oil,711.88,716.75,+1.05%,USD
+26,united states,Natural Gas,5.6,5.68,-1.36%,USD
+27,united states,Heating Oil,2.47,2.46,+0.59%,USD
+28,united kingdom,Carbon Emissions,58.04,60.37,-3.86%,EUR
+29,united states,Gasoline RBOB,2.37,2.33,+1.50%,USD
+30,united kingdom,London Wheat,202.25,202.5,-0.12%,GBP
+31,united states,Rough Rice,13.76,13.84,-0.61%,USD
+32,united states,US Soybean Oil,61.3,62.06,-1.22%,USD
+33,united states,US Soybean Meal,318.95,319.3,-0.11%,USD
+34,united states,US Soybeans,1242.5,1247.0,-0.36%,USD
+35,united states,US Wheat,733.3,741.0,-1.04%,USD
+36,united states,US Corn,530.25,534.0,-0.70%,USD
+37,united states,Oats,647.8,617.5,+4.91%,USD
