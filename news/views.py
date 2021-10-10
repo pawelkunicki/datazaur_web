@@ -25,3 +25,7 @@ def news(request):
 
 
 
+def calendar(request):
+    context = {}
+
+    return render(request, 'news/calendar.html')

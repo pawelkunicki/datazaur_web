@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Cryptocurrency(models.Model):
     name = models.CharField(max_length=32, blank=False)
     symbol = models.CharField(max_length=8, blank=False)
@@ -44,7 +45,7 @@ class ExchangeCoins(models.Model):
 
 class Ticker(models.Model):
     base_currency = models.ForeignKey('crypto.Cryptocurrency', on_delete=models.CASCADE)
-    quote_currency = models.ForeignKey('forex.Currency', on_delete=models.CASCADE)
+    quote_currency = models.ForeignKey('markets.Currency', on_delete=models.CASCADE)
     source = models.ForeignKey('crypto.Exchange', on_delete=models.CASCADE)
     bid_price = models.FloatField(default=0)
     ask_price = models.FloatField(default=0)
@@ -54,3 +55,4 @@ class Ticker(models.Model):
     daily_change = models.FloatField(default=0)
     weekly_change = models.FloatField(default=0)
     monthly_change = models.FloatField(default=0)
+

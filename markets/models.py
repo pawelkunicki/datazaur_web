@@ -13,8 +13,6 @@ class Currency(models.Model):
     name = models.CharField(max_length=32, unique=False, null=True)
     symbol = models.CharField(max_length=3, unique=True, null=False)
     country = models.CharField(max_length=32, blank=True, null=True)
-    cross_rates = models.ManyToManyField('forex.Currency', related_name='currency_cross_rates', through='crossrate',
-                                         through_fields=('base_currency', 'quote_currency'), blank=True)
 
 
 

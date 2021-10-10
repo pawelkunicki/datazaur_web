@@ -2,11 +2,11 @@ import os
 import pandas as pd
 from django.contrib.auth.models import User
 from watchlist.models import Watchlist
-from portfolio.models import Portfolio
-from forex.models import Currency
-from forex.fx_monitor import ForexMonitor
+
+from markets.models import Currency
+from utils.fx_monitor import ForexMonitor
 from crypto.models import Cryptocurrency, Exchange
-from crypto.crypto_monitor import *
+from utils.crypto_monitor import *
 from django.conf import settings
 
 

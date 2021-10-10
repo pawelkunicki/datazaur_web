@@ -75,6 +75,11 @@ def trade(request):
     return render(request, 'trading/trading.html', context)
 
 
+def algorithms(request):
+    context = {}
+
+
+    return render(request, 'trade/algorithms.html', context)
 
 def cointegration(request):
     context = {}

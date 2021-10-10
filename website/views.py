@@ -10,9 +10,8 @@ from django.urls import reverse
 import httpagentparser
 from .models import UserProfile
 from .forms import SelectCurrency
-from portfolio.models import Portfolio
 from watchlist.models import Watchlist
-from forex.models import Currency
+from markets.models import Currency
 from utils.setup_db import setup_db, check_watchlists_and_portfolios
 # Create your views here.
 

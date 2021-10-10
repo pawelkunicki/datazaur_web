@@ -6,14 +6,13 @@ import os
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
-from .crypto_monitor import *
+from utils.crypto_monitor import *
 from .models import Cryptocurrency, Exchange
 from utils.compare_timestamps import compare_timestamps
 from utils.charts import Chart
 from utils.random_color import get_random_color
-from watchlist.models import Watchlist, WatchlistCoins
-from portfolio.models import Portfolio, Amounts
-from portfolio.forms import AddToPortfolio
+from watchlist.models import Watchlist, WatchlistCoins, Portfolio, Amounts
+
 from website.models import UserProfile
 
 # Create your views here.
@@ -21,7 +20,7 @@ from website.models import UserProfile
 CRYPTO_FILE = settings.CRYPTO_FILE
 EXCHANGES_FILE = settings.EXCHANGES_FILE
 
-def coins(request):
+def crypto(request):
     context = {}
     refresh_rate = settings.REFRESH_RATE
 

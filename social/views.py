@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-def social_trading(request):
+def social(request):
     context = {}
 
     if request.method == 'GET':

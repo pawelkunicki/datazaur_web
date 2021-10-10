@@ -90,3 +90,7 @@ def top_traders(request):
     return render(request, 'social/top_traders.html', context)
 
 
+def top_strategies(request):
+    context = {}
+
+    return render(request, 'social/top_strategies.html')

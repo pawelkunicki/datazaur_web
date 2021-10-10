@@ -5,7 +5,7 @@ from django.db import models
 
 class Portfolio(models.Model):
     user = models.ForeignKey('website.UserProfile', on_delete=models.CASCADE, related_name='portfolio_userprofile')
-    currency = models.ForeignKey('forex.Currency', on_delete=models.CASCADE, related_name='portfolio_currency',
+    currency = models.ForeignKey('markets.Currency', on_delete=models.CASCADE, related_name='portfolio_currency',
                                  blank=True, null=True)
     coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='portfolio_cryptocurrency',
                                    through='amounts', through_fields=('portfolio', 'coin'))
@@ -13,7 +13,7 @@ class Portfolio(models.Model):
 
 
 class Amounts(models.Model):
-    portfolio = models.ForeignKey('portfolio.Portfolio', on_delete=models.CASCADE, related_name='amounts_portfolio')
+    portfolio = models.ForeignKey('watchlist.Portfolio', on_delete=models.CASCADE, related_name='amounts_portfolio')
     coin = models.ForeignKey('crypto.Cryptocurrency', on_delete=models.CASCADE, related_name='amounts_coin')
     amount = models.FloatField()
 
@@ -21,7 +21,7 @@ class Amounts(models.Model):
 
 class Watchlist(models.Model):
     user = models.ForeignKey('website.UserProfile', blank=False, null=False, related_name='watchlist_userprofile', on_delete=models.CASCADE)
-    currency = models.ForeignKey('forex.Currency', blank=True, null=True, related_name='watchlist_currency',
+    currency = models.ForeignKey('markets.Currency', blank=True, null=True, related_name='watchlist_currency',
                                  on_delete=models.CASCADE)
     coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_cryptocurrency',
                                     through='watchlistcoins', through_fields=('watchlist', 'coin'))

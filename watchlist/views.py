@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from .forms import AddToPortfolio, ChangeCurrency
-
-
+from .models import Watchlist, WatchlistCoins, Portfolio, Amounts
+from markets.models import Currency
 from utils.portfolio_value import get_portfolio_value
 from website.models import UserProfile
 

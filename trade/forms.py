@@ -1,5 +1,5 @@
 from django import forms
-from static.const.constants import ORDER_TYPES, MARKET_TYPES
+from static.data.constants import ORDER_TYPES, MARKET_TYPES
 import ccxt
 from crypto.models import Exchange, ExchangeCoins
 

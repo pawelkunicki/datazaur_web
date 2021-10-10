@@ -1,5 +1,5 @@
 from django import forms
-from forex.models import Currency
+from markets.models import Currency
 
 
 class SelectCurrency(forms.Form):
