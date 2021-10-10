@@ -2,7 +2,7 @@ import yaml
 from forex_python.converter import CurrencyRates
 import pandas as pd
 import os
-
+from django.conf import settings
 
 
 class ForexMonitor:
@@ -19,17 +19,14 @@ class ForexMonitor:
     def round_data(df, n):
         for col in df.columns:
             df[col] = df[col].round(n)
+        return df
 
     def load_config(self):
-        config_file = os.path.join(os.path.dirname(os.getcwd()), 'config.yaml')
-        try:
-            with open(config_file, 'r') as stream:
-                config = yaml.safe_load(stream)
-                self.base_currency = config['BASE_CURRENCY']
-                self.sorted_currencies = config['SORTED_CURRENCIES']
-        except:
-            self.base_currency = 'USD'
-            self.sorted_currencies = []
+
+        self.base_currency = settings.DEFAULT_CURRENCY
+        self.sorted_currencies = settings.SORTED_CURRENCIES
+
+
 
 
 
@@ -41,9 +38,14 @@ class ForexMonitor:
             self.sorted_currencies.remove(self.base_currency)
             self.sorted_currencies.insert(0, self.base_currency)
             self.matrix = pd.DataFrame(index=self.sorted_currencies, columns=self.sorted_currencies)
+            print(1)
+            print(self.matrix)
             self.matrix.loc[self.base_currency, :] = rates
             self.matrix.loc[:, self.base_currency] = rates
+            print(2)
+            print(self.matrix)
             self.matrix = self.round_data(self.calculate_cross_rates(self.matrix, self.base_currency), 3)
+            print(3)
             print(self.matrix)
             return self.matrix
         except:

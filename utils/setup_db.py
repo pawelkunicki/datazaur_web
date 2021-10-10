@@ -13,7 +13,7 @@ from django.conf import settings
 
 def setup_fx_db():
     currencies = settings.SORTED_CURRENCIES
-    codes = pd.read_csv(settings.CURRENCY_CODES_FILE)
+    codes = pd.read_csv(settings.FX_FILE)
     codes.drop_duplicates(subset=['Alphabetic_Code'], inplace=True, keep='first')
     codes.set_index('Alphabetic_Code', inplace=True)
     for curr in currencies:
@@ -51,8 +51,7 @@ def setup_exchanges_db():
     if exchanges_file in os.listdir():
         exchanges = pd.read_csv(settings.EXCHANGES_FILE, index_col=1)
     else:
-        monitor = CryptoMonitor()
-        exchanges = monitor.exchanges_by_vol()
+        exchanges = exchanges_by_vol()
         exchanges.to_csv(exchanges_file)
     for i, row in exchanges.iterrows():
         new_exchange = Exchange.objects.create(name=i, url=row['Url'], country=row['Country'],
@@ -84,9 +83,6 @@ def setup_db():
 def check_watchlists_and_portfolios():
     users = User.objects.all()
     for user in users:
-        if not Portfolio.objects.filter(user=user).exists():
-            new_portfolio = Portfolio.objects.create(user=user)
-            new_portfolio.save()
         if not Watchlist.objects.filter(user=user).exists():
             new_watchlist = Watchlist.objects.create(user=user)
             new_watchlist.save()

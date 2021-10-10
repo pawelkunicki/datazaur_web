@@ -5,8 +5,8 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
-
-
+import datetime
+from utils.fx_monitor import ForexMonitor
 from utils.portfolio_value import get_portfolio_value
 from website.models import UserProfile
 # Create your views here.
@@ -25,9 +25,17 @@ def crypto(request):
     return render(request, 'markets/crypto.html', context)
 
 def forex(request):
-    context = {}
+    today = datetime.datetime.today()
+    FX = ForexMonitor()
+    FX.sorted_currencies = settings.SORTED_CURRENCIES
+    table = FX.get_forex_matrix()
+    rates = table.iloc[0, :]
 
-    return render(request, 'markets/forex.html', context)
+
+
+    context = {'currencies': FX.sorted_currencies, 'table': table.to_html()}
+
+    return render(request, 'markets/forex_matrix.html', context)
 
 def indices(request):
     context = {}
