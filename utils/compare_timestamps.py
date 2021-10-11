@@ -2,7 +2,7 @@ import datetime
 import os
 
 
-def compare_timestamps(refresh_rate=60, file=None):
+def compare_timestamps(refresh_rate=600, file=None):
     return file in os.listdir() and datetime.datetime.now().timestamp() - os.path.getmtime(file) < refresh_rate
 
 

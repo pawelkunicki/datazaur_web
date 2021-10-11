@@ -21,11 +21,7 @@
 <body>
 
 {% block navbar %}
-    {% if request.user.is_authenticated %}
-        {% include 'website/_navbar_logged.html' %}
-    {% else %}
-        {% include 'website/_navbar.html' %}
-    {% endif %}
+    {% include 'website/_navbar.html' %}
 {% endblock %}
 
 

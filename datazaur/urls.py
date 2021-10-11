@@ -17,14 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 import debug_toolbar
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('__debug__/', include(debug_toolbar.urls)),
     path('', include('website.urls'), name='website'),
     path('markets/', include('markets.urls'), name='markets'),
-    path('macro/', include('macro.urls'), name='macro'),
     path('trade/', include('trade.urls'), name='trade'),
+    path('macro/', include('macro.urls'), name='macro'),
+    path('fundamentals/', include('fundamentals.urls'), name='fundamentals'),
     path('crypto/', include('crypto.urls'), name='crypto'),
     path('watchlist/', include('watchlist.urls'), name='watchlist'),
     path('messenger/', include('messenger.urls'), name='messenger'),
@@ -32,3 +32,4 @@ urlpatterns = [
     path('social/', include('social.urls'), name='social'),
 
 ]
+

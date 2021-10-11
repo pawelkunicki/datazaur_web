@@ -1,7 +1,8 @@
-
+'''
 from forex_python.converter import CurrencyRates
 import pandas as pd
 import os
+import investpy
 from django.conf import settings
 from .compare_timestamps import compare_dates
 
@@ -40,3 +41,12 @@ def get_forex_matrix(currency=CURRENCY):
 
 def calculate_cross_rates(matrix, base_currency):
     return matrix.apply(lambda x: matrix.loc[base_currency] / x.loc[base_currency]).transpose()
+
+
+
+def get_fx_rates(base_currency):
+    return investpy.get_currency_crosses_overview(base_currency)[['symbol', 'bid', 'change', 'change_percentage']]
+'''
+
+
+

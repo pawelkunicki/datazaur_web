@@ -1,3 +1,5 @@
+
+'''
 import os
 from utils.compare_timestamps import *
 import investpy
@@ -5,7 +7,7 @@ import pandas as pd
 import datetime
 from static.data.default_countries import DEFAULT_COUNTRIES
 from static.data.default_indices import GENERAL_INDICES
-from .crypto_monitor import color_prices
+from .crypto_monitor import *
 
 def check_indices_files():
     return
@@ -101,7 +103,7 @@ def get_yield_curves():
 
 
 def get_commodities():
-    cols = ['name', 'last', 'change_percentage', 'currency']
+    cols = ['name', 'last', 'change_percentage']
     COMMODITTIES_FILE = 'commodities.csv'
     if COMMODITTIES_FILE is os.listdir():
         return pd.read_csv(COMMODITTIES_FILE, index_col=0)
@@ -111,10 +113,11 @@ def get_commodities():
         table = investpy.get_commodities_overview(group)[cols]
         result = result.append(table, ignore_index=True)
 
-    result.iloc[:, 1:3] = result.iloc[:, 1:3].astype(float).round(2)
-    result.iloc[:, 2] = result.iloc[:, 2].apply(color_prices)
-    result.columns = ['Name', 'Price', '24h Δ', 'Currency']
+    result.iloc[:, 1] = result.iloc[:, 1].astype(float).round(2)
+    result.columns = ['Name', 'Price', '24h Δ']
     result.to_csv(COMMODITTIES_FILE)
+    result.iloc[:, 2] = result.iloc[:, 2].apply(color_cell)
     return result
 
 
+'''

@@ -9,10 +9,10 @@ from utils.compare_timestamps import *
 
 coins_file = settings.CRYPTO_FILE
 currency = settings.DEFAULT_CURRENCY
-api_key = settings.CRYPTOCOMPARE_API_KEY
+api_key = os.environ.get('CRYPTOCOMPARE_KEY')
 base_cryptocompare_url = settings.BASE_CRYPTOCOMPARE_URL
 
-
+'''
 def get_coins_info():
     url = f'https://min-api.cryptocompare.com/data/all/coinlist?api_key={api_key}'
     data = pd.DataFrame(requests.get(url).json()['Data']).transpose()[['Id', 'Name', 'Symbol', 'CoinName',
@@ -32,15 +32,27 @@ def get_coins_data():
 
 def coins_by_mcap():
     url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={currency}&api_key={api_key}'
-    cols = f'CoinInfo.Name CoinInfo.FullName CoinInfo.Url RAW.{currency}.PRICE ' \
+    cols = f'CoinInfo.Name CoinInfo.FullName CoinInfo.Url RAW.{currency}.PRICE RAW.{currency}.CHANGE24HOUR ' \
            f'RAW.{currency}.CHANGEPCTHOUR RAW.{currency}.CHANGEPCT24HOUR ' \
            f'RAW.{currency}.TOTALVOLUME24HTO ' \
            f'RAW.{currency}.MKTCAP RAW.{currency}.SUPPLY RAW.{currency}.LASTUPDATE'.split()
+
     df = pd.json_normalize(requests.get(url).json()['Data']).loc[:, cols]
+    print(df)  #
+    #df.columns = ['Symbol', 'Name', 'Url', 'Price',  '1h Δ', '24h Δ', 'Volume', 'Mkt cap', 'Supply', 'Updated']
+    print(df.columns)
     df = prepare_df_save(df)
     df.to_csv(coins_file)
-    df = prepare_df_display(df, cols_to_split=[2, 5, 6, 7], upd_col=True, round_decimals=6)
+
+    df = prepare_df_display(df, cols_to_split=[3, 4, 5, 6, 7, 8], upd_col=True, round_decimals=4)
+    #df.iloc[:, 2:4] = df.iloc[:, 2:4].applymap(lambda x: round_number(x, 4))
+    #df[['1h Δ', '24h Δ']] = df[['1h Δ', '24h Δ']].applymap(color_cell)
     return df
+
+
+def round_number(x, n):
+    x2 = float(x.replace('%', '').replace('+', '')) if type(x) == str else x
+    return x2.__round__(n)
 
 
 
@@ -50,23 +62,38 @@ def add_hyperlinks(df):
     return df
 
 
-def color_prices(x):
+def string_to_float(x):
     if type(x) == str:
-        x = float(x.replace('%', '').replace(',', '.'))
-    return f"""<p class=green>{x}%</p>""" if x >= 0 else f"""<p class=red>{x}%</p>"""
+        return float(x.replace('%', '').replace('+', ''))
+
+
+def color_cell(x):
+    if type(x) != float:
+        num_x = float(x.replace('%', '').replace('+', '')).__round__(2)
+    else:
+        num_x = x.__round__(2)
+    return f"""<p class=green>{format(num_x, ',')}%</p>""" if num_x >= 0 else f"""<p class=red>{format(num_x, ',')}%</p>"""
 
 
 def prepare_df_display(df, cols_to_split, upd_col, round_decimals):
+    df = set_dtypes(df, float=[3], int=[6,7,8])
+
+    df.iloc[:, [3,6,7,8]] = df.iloc[:, [3,6,7,8]].applymap(lambda x: format(x, ','))
+
+    df[['1h Δ', '24h Δ']] = df[['1h Δ', '24h Δ']].applymap(color_cell)
+
     df = add_hyperlinks(df)
     if 'Url' in df.columns:
         df.drop('Url', inplace=True, axis=1)
-    df[['1h Δ', '24h Δ']] = df[['1h Δ', '24h Δ']].round(2)
-    df.iloc[:, 3:5] = df.iloc[:, 3:5].applymap(color_prices)
-    df.loc[:, ['Price']] = df.loc[:, ['Price']].astype('float64')
-    df.loc[:, ['Price']] = df.loc[:, ['Price']].round(round_decimals)
-    df.iloc[:, cols_to_split] = df.iloc[:, cols_to_split].applymap(lambda x: format(x, ','))
     if upd_col:
         df['Updated'] = df['Updated'].apply(lambda x: pd.to_datetime(x * 10 ** 9))
+    return df
+
+
+def set_dtypes(df, **kwargs):
+    for k, v in kwargs.items():
+        for col_n in v:
+            df.iloc[:, col_n] = df.iloc[:, col_n].astype(k)
     return df
 
 
@@ -76,6 +103,10 @@ def prepare_df_save(df):
     df.dropna(inplace=True)
     df.iloc[:, 6:9] = df.iloc[:, 6:9].astype('int64')
     return df
+
+
+
+
 
 def exchanges_by_vol():
     url = f'https://min-api.cryptocompare.com/data/exchanges/general?api_key={api_key}&tsym={currency}'
@@ -96,4 +127,4 @@ def global_metrics():
     return 1
 
 
-
+'''

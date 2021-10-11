@@ -1,7 +1,7 @@
 {% extends 'website/base.html' %}
 
 {% block navbar %}
-    {% include 'website/_base_navbar.html' with items=navbar %}
+    {% include 'markets/_markets_navbar.html' %}
 {% endblock %}
 
 {% block searchbar %}
@@ -23,19 +23,31 @@
         <h2>
             Forex
         </h2>
-        {{ currencies |safe }}
+        <select id="fx_chg_curr">
+            {% for currency in currencies %}
+                <option id="{{ currency }}" value="{{ currency }}">
+                    {{ currency }}
+                </option>
+        </select>
+        {{ forex |safe }}
     </div>
     <div id="indices_col" class="market_col">
         <h2>
             Indices
         </h2>
+        <select id="indices_chg_country">
+            {% for country in countries %}
+                <option id="{{ country.id }}" value="{{ country.name }}">
+                    {{ currency.name }}
+                </option>
+        </select>
         {{ indices |safe }}
     </div>
     <div id="bonds_col" class="market_col">
         <h2>
             Yields
         </h2>
-        {{ bonds |safe }}
+        {{ yields |safe }}
     </div>
 
     <div id="commodities_col" class="market_col">
