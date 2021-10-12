@@ -1,5 +1,4 @@
 import requests
-import investpy
 import os
 from utils.compare_timestamps import *
 import investpy
@@ -24,47 +23,63 @@ def all_markets_data(refresh_rate=REFRESH_RATE):
     data = {}
     coins_file = FILES['crypto']
     if compare_timestamps(refresh_rate, coins_file):
-        data['crypto'] = pd.read_csv(coins_file, index_col=0).iloc[:20, :]
+        coins_data = pd.read_csv(coins_file, index_col=0).iloc[:20, :7]
     else:
-        data['crypto'] = coins_by_mcap().iloc[:20, :]
+        coins_data = coins_by_mcap().iloc[:20, :7]
+    print(coins_data.columns)
+    coins_data['24h Δ'] = coins_data['24h Δ'].astype(str) + coins_data['24h %Δ'].apply(lambda x: f'({x})')
+    data['crypto'] = prepare_df_display(coins_data.iloc[:, :4]).to_html(escape=False, justify='center')
     print(f'1{data}')
 
     fx_file = FILES['forex']
     if compare_timestamps(refresh_rate, fx_file):
-        data['forex'] = pd.read_csv(fx_file, index_col=0).iloc[0]
+        forex = pd.read_csv(fx_file, index_col=0)
     else:
-        data['forex'] = get_fx_rates(CURRENCY)
+        forex = get_fx_rates(CURRENCY)
+        forex.to_csv(fx_file)
+    forex['change'] = forex['change'].astype(str) + '<br> (' + forex['change_percentage'].astype(str) + ')'
+    forex['change'] = forex['change'].apply(color_cell)
+    forex.columns = ['Symbol', 'Rate', '24h Δ', 'x']
+    data['forex'] = forex.iloc[:, :4].to_html(escape=False, justify='center')
+
 
     print(f'2{data}')
 
     indices_file = FILES['indices']
     if compare_timestamps(refresh_rate, indices_file):
-        data['indices'] = pd.read_csv(indices_file, index_col=0)
+        indices = pd.read_csv(indices_file, index_col=0)
     else:
-        data['indices'] = get_indices_table()
+        indices = get_indices_table()
+        indices.to_csv(indices_file)
+    data['indices'] = indices.to_html(escape=False, justify='center')
 
     print(f'3{data}')
 
     yields_file = FILES['yields']
     if compare_timestamps(refresh_rate, yields_file):
-        data['yields'] = pd.read_csv(yields_file, index_col=0)
+        yields = pd.read_csv(yields_file, index_col=0)
     else:
-        data['yields'] = get_yields_table(TENOR)
+        yields = get_yields_table(TENOR)
+        yields.to_csv(yields_file)
+    data['yields'] = yields.to_html(escape=False, justify='center')
 
     print(f'4{data}')
     commodities_file = FILES['commodities']
     if compare_timestamps(refresh_rate, commodities_file):
         data['commodities'] = pd.read_csv(commodities_file, index_col=0)
     else:
-        data['commodities'] = get_commodities()
+        commodities = get_commodities()
+        data['commodities'] = commodities
+        #commodities.to_csv(commodities_file)
 
     print(f'5{data}')
 
-    for k, v in data.items():
-
-        v.to_csv(f'{k}.csv')
-        data[k] = pd.DataFrame(v).to_html(escape=False)
-
+    # for k, v in data.items():
+    #     if k == 'commodities':
+    #         for group, product in v.items():
+    #             data[f'{k} / {group}'] = product.to_html(escape=False)
+    #     data[k] = pd.DataFrame(v).to_html(escape=False)
+    #
     return data
 
 
@@ -148,18 +163,32 @@ def get_commodities():
     cols = ['name', 'country', 'last', 'change', 'change_percentage', 'currency']
     result_cols = ['Instrument', 'Price', '24h Δ']
     result = pd.DataFrame(columns=result_cols)
+    groups = investpy.get_commodity_groups()
+    # names = ['group', 'commodity']
+    # tuples = {}
+    tables = {}
+    for group in groups:
 
-    for group in investpy.get_commodity_groups():
         table = investpy.get_commodities_overview(group)[cols]
-        table['Instrument'] = f"{table['name']} ({table['country']})"
-        table['Price'] = f"{table['last']} ({table['currency']})"
-        table['24h Δ'] = f"{table['change']} ({table['change_percentage']})"
-        result = result.append(table[result_cols], ignore_index=True)
+        print(table)
+        # tuples[group] = (zip(group, product) for product in table['name'])
+        # print(tuples)
+        table['Instrument'] = table['name'] + '<br>' + table['country'].astype(str).apply(lambda x: '' if x == 'None' else x.title())
+        table['Price'] = table['last'].astype(str) + '<br>' + table['currency']
+        table['24h Δ'] = table['change'].astype(str) + '<br> (' + table['change_percentage'].astype(str) + ')'
+        tables[group] = table[result_cols].to_html(escape=False, justify='center')
+
+    # rdy_tuples = ()
+    # for k,v in tuples.items():
+    #     rdy_tuples += v
+    # rdy_tuples = (tuples.values())
+    # print(rdy_tuples)
+    # indx = pd.MultiIndex.from_tuples(rdy_tuples)
 
     #result.iloc[:, 1] = result.iloc[:, 1].astype(float).round(2)
     result.iloc[:, 2] = result.iloc[:, 2].apply(color_cell)
 
-    return result
+    return tables
 
 
 
@@ -202,7 +231,7 @@ def coins_by_mcap():
     df = prepare_df_save(df)
     df.to_csv(coins_file)
 
-    df = prepare_df_display(df, cols_to_split=[3, 4, 5, 6, 7, 8], upd_col=True, round_decimals=4)
+    df = prepare_df_display(df)
     #df.iloc[:, 2:4] = df.iloc[:, 2:4].applymap(lambda x: round_number(x, 4))
     #df[['1h Δ', '24h Δ']] = df[['1h Δ', '24h Δ']].applymap(color_cell)
     return df

@@ -40,23 +40,28 @@ def color_cell(x):
         color = 'green'
     return f"""<p class={color}>{x}</p>"""
 
-def prepare_df_display(df, cols_to_split, upd_col, round_decimals):
-    df = set_dtypes(df, float=[3, 4])
+def prepare_df_display(df):
+    df.iloc[:, 3:] = df.iloc[:, 3:].astype('float64').round(3)
 
-    df.iloc[:, [3,4]] = df.iloc[:, [3,4]].applymap(lambda x: format(x, ','))
+    df.iloc[:, 3:] = df.iloc[:, 3:].applymap(lambda x: format(x, ','))
 
-    df[['1h %Δ', '24h% Δ']] = df[['1h %Δ', '24h %Δ']].applymap(color_cell)
+    delta_cols = [col for col in df.columns if 'Δ' in col]
+    if delta_cols:
+        df[delta_cols] = df[delta_cols].applymap(color_cell)
 
     df = add_hyperlinks(df)
     if 'Url' in df.columns:
         df.drop('Url', inplace=True, axis=1)
-    if upd_col:
+    if 'Updated' in df.columns:
         df['Updated'] = df['Updated'].apply(lambda x: pd.to_datetime(x * 10 ** 9))
     return df
 
 
 def set_dtypes(df, **kwargs):
     for k, v in kwargs.items():
+        print(df)
+        print(k)
+        print(v)
         for col_n in v:
             df.iloc[:, col_n] = df.iloc[:, col_n].astype(k)
     return df
@@ -66,7 +71,7 @@ def prepare_df_save(df):
     df.columns = ['Symbol', 'Name', 'Url', 'Price', '24h Δ', '1h %Δ', '24h %Δ', '24h vol', f'Market cap ({CURRENCY})',
                   'Supply', 'Updated']
     df.dropna(inplace=True)
-    df.iloc[:, 6:9] = df.iloc[:, 6:9].astype('int64')
+    df.iloc[:, 7:9] = df.iloc[:, 7:9].astype('int64')
     return df
 
 

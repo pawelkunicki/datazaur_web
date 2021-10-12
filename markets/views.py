@@ -1,16 +1,9 @@
-from django.conf import settings
-from utils.crypto_monitor import *
-from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.views.generic import ListView
-from django.contrib.auth.decorators import login_required
-import datetime
+from django.shortcuts import render
 from .forms import AddFXTicker
 from utils.market_data import *
-from utils.portfolio_value import get_portfolio_value
 from website.models import UserProfile
-from markets.models import Currency
+
+
 # Create your views here.
 
 
@@ -30,9 +23,9 @@ def markets(request):
     # bonds_df['24h Δ'] = bonds_df['24h Δ'].apply(color_cell)
     #
     # commodities_df = get_commodities()
-    data = all_markets_data(600)
-    context = {k: v for k, v in data.items()}
-    print(data)
+
+    context = all_markets_data(600)
+
     print(context)
     context['currencies'] = settings.SORTED_CURRENCIES
 
@@ -65,7 +58,7 @@ def forex(request):
         else:
             currency = settings.DEFAULT_CURRENCY
 
-        rates_df = pd.DataFrame(get_rates(currency))
+        rates_df = pd.DataFrame(get_fx_rates(currency))
         col_name = rates_df.columns[0]
         rates_df = rates_df[rates_df[col_name] != 1]
         rates = [(i, v[col_name]) for i, v in rates_df.iterrows()]

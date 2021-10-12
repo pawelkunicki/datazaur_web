@@ -16,7 +16,7 @@
         <h2>
             Crypto
         </h2>
-        {{ coins |safe }}
+        {{ crypto |safe }}
     </div>
 
     <div id="fx_col" class="market_col">
@@ -28,6 +28,7 @@
                 <option id="{{ currency }}" value="{{ currency }}">
                     {{ currency }}
                 </option>
+            {% endfor %}
         </select>
         {{ forex |safe }}
     </div>
@@ -40,6 +41,7 @@
                 <option id="{{ country.id }}" value="{{ country.name }}">
                     {{ currency.name }}
                 </option>
+            {% endfor %}
         </select>
         {{ indices |safe }}
     </div>
@@ -54,14 +56,20 @@
         <h2>
             Commodities
         </h2>
-        {{ commodities |safe }}
+        {% for k,v in commodities.items %}
+        <div class="commodity_table">
+            <h3>
+                {{ k }}
+            </h3>
+            {{ v |safe }}
+        </div>
+        {% endfor %}
     </div>
-
 
 </div>
 
 {% endblock %}
 
 {% block js %}
-
+    <script src="{% static 'js/hideIndexCol.js' %}" type="text/javascript"></script>
 {% endblock %}

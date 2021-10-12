@@ -1,14 +1,11 @@
 {% extends 'website/base.html' %}
 
-{% block navbar %}
-    {% include 'news/_news_navbar' %}
-{% endblock %}
 {% block searchbar %}
 
 {% endblock %}
 
 {% block content %}
-<div id="news_table">
-    {{ news |safe }}
+<div id="events_table">
+    {{ events |safe }}
 </div>
 {% endblock %}

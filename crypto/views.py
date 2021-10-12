@@ -1,13 +1,7 @@
-from django.shortcuts import render
-
 # Create your views here.
-import pandas as pd
-import os
-from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
-from django.conf import settings
-from utils.crypto_monitor import *
-from .models import Cryptocurrency, Exchange
+from django.shortcuts import render
+from backup.crypto_monitor import *
+from .models import Cryptocurrency
 from utils.compare_timestamps import compare_timestamps
 from utils.charts import Chart
 from utils.random_color import get_random_color

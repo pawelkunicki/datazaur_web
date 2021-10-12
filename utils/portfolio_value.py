@@ -1,8 +1,5 @@
-import os
-
-import pandas as pd
 from forex_python.converter import CurrencyRates
-from utils.crypto_monitor import *
+from backup.crypto_monitor import *
 from utils.compare_timestamps import compare_timestamps
 from django.conf import settings
 

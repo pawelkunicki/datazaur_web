@@ -1,12 +1,9 @@
-import os
-import pandas as pd
 from django.contrib.auth.models import User
 from watchlist.models import Watchlist
 
 from markets.models import Currency
-from utils.fx_monitor import *
 from crypto.models import Cryptocurrency, Exchange
-from utils.crypto_monitor import *
+from backup.crypto_monitor import *
 from django.conf import settings
 
 FX_FILE = 'static/data/iso-4217-currency-codes.csv'

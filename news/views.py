@@ -3,6 +3,7 @@ from django.conf import settings
 import requests
 import pandas as pd
 import os
+from pycoingecko import CoinGeckoAPI
 # Create your views here.
 
 
@@ -19,13 +20,23 @@ def news(request):
     df['published_on'] = df['published_on'].apply(lambda x: pd.to_datetime(x*10**9), True)
     df.drop('url', axis=1, inplace=True)
     df.columns = ['Date', 'Title', 'Source', 'Text', 'Categories']
-    context = {'table': df.to_html(justify='center', escape=False)}
+    context = {'news': df.to_html(justify='center', escape=False)}
     return render(request, 'news/news.html', context)
 
 
 
 
+def events(request):
+    context = {}
+    gecko = CoinGeckoAPI()
+    events = gecko.get_events()['data']
+    context['events'] = pd.DataFrame(index=events[0].keys(), data={item['title']: item for item in events}).transpose().to_html(escape=False, justify='left')
+
+    return render(request, 'news/events.html', context)
+
+
 def calendar(request):
     context = {}
 
-    return render(request, 'news/calendar.html')
+
+    return render(request, 'news/calendar.html', context)
