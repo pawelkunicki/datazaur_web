@@ -3,13 +3,13 @@
 {% block searchbar %}
 <div id="tweet_counter">
     <form id="tweet_count_form" method="get" action="?query">
-        <input id="tweet_count_input" name="search_query" type="text" placeholder="#ETH / BTC / bitcoin">
+        <input id="tweet_count_input" name="search_query" type="text" placeholder="#hashtag">
         <label id="granularity_label">
             Granularity
         </label>
         <select id="granularity_select" name="granularity">
-            <option id="m" value="minute"> Minute </option>
             <option id="h" value="hour"> Hour </option>
+            <option id="m" value="minute"> Minute </option>
             <option id="d" value="day"> Day </option>
         </select>
         <button id="tweet_count_button" type="submit">

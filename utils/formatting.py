@@ -41,9 +41,7 @@ def color_cell(x):
     return f"""<p class={color}>{x}</p>"""
 
 def prepare_df_display(df):
-    df.iloc[:, 3:] = df.iloc[:, 3:].astype('float64').round(3)
-
-    df.iloc[:, 3:] = df.iloc[:, 3:].applymap(lambda x: format(x, ','))
+    df[['Price', '24h Δ', '24h %Δ']] = df[['Price', '24h Δ', '24h %Δ']].astype('float64').round(3).applymap(lambda x: format(x, ','))
 
     delta_cols = [col for col in df.columns if 'Δ' in col]
     if delta_cols:
@@ -57,14 +55,6 @@ def prepare_df_display(df):
     return df
 
 
-def set_dtypes(df, **kwargs):
-    for k, v in kwargs.items():
-        print(df)
-        print(k)
-        print(v)
-        for col_n in v:
-            df.iloc[:, col_n] = df.iloc[:, col_n].astype(k)
-    return df
 
 
 def prepare_df_save(df):

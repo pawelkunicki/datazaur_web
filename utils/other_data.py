@@ -3,6 +3,7 @@ from pycoingecko import CoinGeckoAPI
 import requests
 import os
 import pandas as pd
+from .decorators import load_or_save
 import datetime
 
 api_key = os.environ.get('CRYPTOCOMPARE_API_KEY')
@@ -11,22 +12,7 @@ filename = 'cryptocomp_news.csv'
 refresh_rate = 86400
 
 
-# decorator that checks if a file with data exists and whether it's recent enough.
-# refresh rate specifies (in seconds) how often files should be updated
-def load_or_save(filename, refresh_rate):
-    def decorator(func):
-        def wraps(*args, **kwargs):
-            if filename in os.listdir() and datetime.datetime.now().timestamp() - os.path.getmtime(filename) < refresh_rate:
-                print('from file')
-                return pd.read_csv(filename, index_col=0)
-            else:
-                print('from func')
-                data = func(*args, **kwargs)
 
-                pd.DataFrame(data).to_csv(filename)
-                return data
-        return wraps
-    return decorator
 
 
 @load_or_save('cryptocomp_news.csv', 86400)

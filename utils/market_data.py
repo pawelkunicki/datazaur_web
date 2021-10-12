@@ -10,7 +10,7 @@ from static.data.default_indices import GENERAL_INDICES
 from .formatting import *
 
 CRYPTOCOMPARE_KEY = os.environ.get('CRYPTOCOMPARE_KEY')
-FILES = {'crypto': 'crypto.csv', 'forex': 'forex.csv', 'indices': 'indices.csv', 'yields': 'yields.csv',
+FILES = {'crypto': 'crypto_small.csv', 'forex': 'forex.csv', 'indices': 'indices.csv', 'yields': 'yields.csv',
          'commodities': 'commodities.csv'}
 REFRESH_RATE = 600
 COLUMNS = ['Instrument', 'Price', '24h Δ']
@@ -23,12 +23,12 @@ def all_markets_data(refresh_rate=REFRESH_RATE):
     data = {}
     coins_file = FILES['crypto']
     if compare_timestamps(refresh_rate, coins_file):
-        coins_data = pd.read_csv(coins_file, index_col=0).iloc[:20, :8]
+        coins_data = pd.read_csv(coins_file, index_col=0)
     else:
-        coins_data = coins_by_mcap().iloc[:20, :8]
+        coins_data = coins_by_mcap()
     print(coins_data.columns)
-    coins_data['24h Δ'] = coins_data['24h Δ'].astype(str) + coins_data['24h %Δ'].apply(lambda x: f'({x})')
-    data['crypto'] = prepare_df_display(coins_data.iloc[:, :4]).to_html(escape=False, justify='center')
+
+    data['crypto'] = prep_market_df(coins_data).to_html(escape=False, justify='center')
     print(f'1{data}')
 
     fx_file = FILES['forex']
@@ -40,7 +40,7 @@ def all_markets_data(refresh_rate=REFRESH_RATE):
     forex['change'] = forex['change'].astype(str) + '<br> (' + forex['change_percentage'].astype(str) + ')'
     forex['change'] = forex['change'].apply(color_cell)
     forex.columns = ['Symbol', 'Rate', '24h Δ', 'x']
-    data['forex'] = forex.iloc[:, :4].to_html(escape=False, justify='center')
+    data['forex'] = forex.iloc[:, :3].to_html(escape=False, justify='center')
 
 
     print(f'2{data}')
@@ -164,38 +164,19 @@ def get_commodities():
     result_cols = ['Instrument', 'Price', '24h Δ']
     result = pd.DataFrame(columns=result_cols)
     groups = investpy.get_commodity_groups()
-    # names = ['group', 'commodity']
-    # tuples = {}
     tables = {}
     for group in groups:
-
         table = investpy.get_commodities_overview(group)[cols]
-        print(table)
-        # tuples[group] = (zip(group, product) for product in table['name'])
-        # print(tuples)
         table['Instrument'] = table['name'] + '<br>' + table['country'].astype(str).apply(lambda x: '' if x == 'None' else x.title())
         table['Price'] = table['last'].astype(str) + '<br>' + table['currency']
         table['24h Δ'] = table['change'].astype(str) + '<br> (' + table['change_percentage'].astype(str) + ')'
         tables[group] = table[result_cols].to_html(escape=False, justify='center')
-
-    # rdy_tuples = ()
-    # for k,v in tuples.items():
-    #     rdy_tuples += v
-    # rdy_tuples = (tuples.values())
-    # print(rdy_tuples)
-    # indx = pd.MultiIndex.from_tuples(rdy_tuples)
-
-    #result.iloc[:, 1] = result.iloc[:, 1].astype(float).round(2)
     result.iloc[:, 2] = result.iloc[:, 2].apply(color_cell)
-
     return tables
-
-
 
 
 def get_fx_rates(base_currency):
     return investpy.get_currency_crosses_overview(base_currency)[['symbol', 'bid', 'change', 'change_percentage']]
-
 
 
 def get_coins_info():
@@ -208,38 +189,27 @@ def get_coins_info():
                                                                        'IsUsedInDefi', 'IsUsedInNft']]
     return data
 
-def get_coins_data():
-    coins_file = FILES['crypto']
-    if coins_file not in os.listdir() or not compare_timestamps(300, coins_file):
-        return coins_by_mcap()
-    else:
-        return pd.read_csv(coins_file, index_col=0)
+
 
 
 def coins_by_mcap():
     coins_file = FILES['crypto']
-    url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={CURRENCY}&api_key={CRYPTOCOMPARE_KEY}'
-    cols = f'CoinInfo.Name CoinInfo.FullName CoinInfo.Url RAW.{CURRENCY}.PRICE RAW.{CURRENCY}.CHANGE24HOUR ' \
-           f'RAW.{CURRENCY}.CHANGEPCTHOUR RAW.{CURRENCY}.CHANGEPCT24HOUR ' \
-           f'RAW.{CURRENCY}.TOTALVOLUME24HTO ' \
-           f'RAW.{CURRENCY}.MKTCAP RAW.{CURRENCY}.SUPPLY RAW.{CURRENCY}.LASTUPDATE'.split()
-
-    df = pd.json_normalize(requests.get(url).json()['Data']).loc[:, cols]
-    print(df)  #
-    #df.columns = ['Symbol', 'Name', 'Url', 'Price',  '1h Δ', '24h Δ', 'Volume', 'Mkt cap', 'Supply', 'Updated']
-    print(df.columns)
-    df = prepare_df_save(df)
+    url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=50&tsym={CURRENCY}&api_key={CRYPTOCOMPARE_KEY}'
+    cols = f'CoinInfo.Name RAW.{CURRENCY}.PRICE RAW.{CURRENCY}.CHANGE24HOUR RAW.{CURRENCY}.CHANGEPCT24HOUR'.split()
+    df = pd.json_normalize(requests.get(url).json()['Data'])[cols]
     df.to_csv(coins_file)
-
-    df = prepare_df_display(df)
-    #df.iloc[:, 2:4] = df.iloc[:, 2:4].applymap(lambda x: round_number(x, 4))
-    #df[['1h Δ', '24h Δ']] = df[['1h Δ', '24h Δ']].applymap(color_cell)
     return df
 
 
-
-
-
+def prep_market_df(df, n_decimals=2):
+    df.columns = ['Symbol', 'Price', '24h Δ', '24h %Δ']
+    df.iloc[:, 1:] = df.iloc[:, 1:].astype('float64').round(n_decimals)
+    df.iloc[:, 1:] = df.iloc[:, 1:].applymap(lambda x: format(x, ','))
+    df.iloc[:, 2:] = df.iloc[:, 2:].applymap(lambda x: x if '-' in x else '+' + x)
+    df.iloc[:, 3] = df.iloc[:, 3].apply(lambda x: x if '%' in x else x + '%')
+    df.iloc[:, 2] = df.iloc[:, 2].astype(str) + '<br> (' + df.iloc[:, 3].astype(str) + ')'
+    df.iloc[:, 2:] = df.iloc[:, 2:].applymap(color_cell)
+    return df.iloc[:, :-1]
 
 
 

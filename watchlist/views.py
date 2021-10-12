@@ -60,7 +60,6 @@ def watchlist(request):
         context['portfolio'] = portfolio
         context['coins'] = coins
         context['coins_in_pf'] = coins_in_pf
-        print(list(coins))
         try:
             context['value'] = get_portfolio_value(coins_in_pf, portfolio.currency)
         except Exception as e:
