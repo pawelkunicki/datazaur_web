@@ -5,6 +5,9 @@ from .models import Cryptocurrency
 from utils.compare_timestamps import compare_timestamps
 from utils.charts import Chart
 from utils.random_color import get_random_color
+from utils.crypto_data import exchanges_by_vol, top_coins_by_mcap
+from utils.market_data import *
+from utils.other_data import *
 from watchlist.models import Watchlist, WatchlistCoins, Portfolio, Amounts
 
 from website.models import UserProfile
@@ -13,6 +16,7 @@ from website.models import UserProfile
 
 CRYPTO_FILE = settings.CRYPTO_FILE
 EXCHANGES_FILE = settings.EXCHANGES_FILE
+
 
 def crypto(request):
     context = {}
@@ -30,10 +34,10 @@ def crypto(request):
         context['currency'] = settings.DEFAULT_CURRENCY
 
     if CRYPTO_FILE not in os.listdir() or not compare_timestamps(refresh_rate, CRYPTO_FILE):
-        table = coins_by_mcap()
+        table = top_coins_by_mcap()
     else:
         table = pd.read_csv(CRYPTO_FILE, index_col=0)
-        table = prepare_df_display(table, cols_to_split=[2, 5, 6, 7], upd_col=True, round_decimals=3)
+        table = prepare_df_display(table)
 
     if request.method == 'POST' and not request.user.is_authenticated:
         return render(request, 'website/login_required.html', context)
@@ -127,4 +131,91 @@ def dominance(request):
         context['top_n_choices'] = top_n_choices
 
         return render(request, 'crypto/dominance.html', context)
+
+
+
+def global_metrics(request):
+
+    context = gecko_global_metrics()
+
+    return render(request, 'crypto/global_metrics.html', context)
+
+
+def events(request):
+    context = {}
+
+    return render(request, 'crypto/events.html', context)
+
+def icos(request):
+    context = {}
+
+    return render(request, 'crypto/icos.html', context)
+
+
+def nft(request):
+    context = {}
+
+    return render(request, 'crypto/ntf.html', context)
+
+
+def defi(request):
+    context = {}
+
+    return render(request, 'crypto/defi.html', context)
+
+
+
+
+def trends(request):
+    context = {}
+    filename = settings.CRYPTO_FILE
+
+    if compare_timestamps(600, filename):
+        coins = pd.read_csv(filename, index_col=0).iloc[:, :8]
+    else:
+        coins = top_coins_by_mcap().iloc[:, :8]
+
+    coins.loc[:, 'Price'] = coins.loc[:, 'Price'].astype('float64').round(6)
+    print(coins.columns)
+
+    if request.method == 'GET':
+
+        timeframe = request.GET['timeframe'] if 'timeframe' in str(request.GET) else '24h'
+
+        timeframes = ['1h', '24h']
+        timeframes.remove(timeframe)
+        timeframes.insert(0, timeframe)
+        context['timeframes'] = timeframes
+
+        sort_key = timeframe + ' Δ'
+
+        gainers = coins.sort_values(by=sort_key, ascending=False)
+        losers = coins.sort_values(by=sort_key, ascending=True)
+
+
+        gainers = prepare_df_display(gainers)
+        losers = prepare_df_display(losers)
+
+        context['gainers_table'] = gainers.to_html(justify='center', escape=False)
+        context['losers_table'] = losers.to_html(justify='center', escape=False)
+
+        return render(request, 'crypto/trends.html', context)
+
+    elif request.method == 'POST':
+        pass
+        return render(request, 'crypto/trends.html', context)
+
+
+
+def wallets(request):
+    context = {}
+
+    return render(request, 'crypto/wallets.html', context)
+
+
+def games(request):
+    context = {}
+
+    return render(request, 'crypto/games.html', context)
+
 

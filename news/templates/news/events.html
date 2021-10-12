@@ -5,7 +5,12 @@
 {% endblock %}
 
 {% block content %}
-<div id="events_table">
-    {{ events |safe }}
+<div id="events">
+    {% for event in events %}
+        <p>
+        {{ event.0 }}
+        </p>
+        {{ event.1 |safe }}
+    {% endfor %}
 </div>
 {% endblock %}

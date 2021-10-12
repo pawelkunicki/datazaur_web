@@ -1,0 +1,119 @@
+,0,1
+0,"The inaugural GeckoCon – NFTs Gone Wild brings together key minds and voices of the NFT space to enlighten enthusiasts on the now and future of all things non-fungible. 
+
+The 2-day virtual conference will cover a kaleidoscope of NFT themes ranging from art, music, collectables, gaming, sports, monetization and more!
+
+Join us, engage with your peers and learn from industry leaders.","<table border=""1"" class=""dataframe"">
+  <thead>
+    <tr style=""text-align: center;"">
+      <th></th>
+      <th>type</th>
+      <th>title</th>
+      <th>organizer</th>
+      <th>start_date</th>
+      <th>end_date</th>
+      <th>website</th>
+      <th>email</th>
+      <th>venue</th>
+      <th>address</th>
+      <th>city</th>
+      <th>country</th>
+      <th>screenshot</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Conference</td>
+      <td>GeckoCon - NFTs Gone Wild</td>
+      <td>CoinGecko</td>
+      <td>2021-11-17</td>
+      <td>2021-11-18</td>
+      <td>https://landing.coingecko.com/coingecko-conference-geckocon-nfts-gone-wild/</td>
+      <td>hello+geckocon@coingecko.com</td>
+      <td>Online</td>
+      <td>https://conference.coingecko.com</td>
+      <td></td>
+      <td></td>
+      <td>https://assets.coingecko.com/conferences/screenshot/519/original/geckocon_3.PNG?1633334465</td>
+    </tr>
+  </tbody>
+</table>"
+1,"After the successful inaugural event week in March 2019, Asia Crypto Week is back again 22-28 November 2021 with what is looking to be an action-packed program. Subscribe to the guide, or watch this space for continuous event updates taking place throughout the week. ​ 
+
+Asia Crypto Week is a week of various independently organized educational and developer-focused events that aim to nurture mass adoption by providing first-hand information about the industry. Blockchain enthusiasts and industry veterans will come to Hong Kong to share their knowledge and stories during Asia Crypto Week, providing exceptional insights into the ever-larger growing ecosystem. ","<table border=""1"" class=""dataframe"">
+  <thead>
+    <tr style=""text-align: center;"">
+      <th></th>
+      <th>type</th>
+      <th>title</th>
+      <th>organizer</th>
+      <th>start_date</th>
+      <th>end_date</th>
+      <th>website</th>
+      <th>email</th>
+      <th>venue</th>
+      <th>address</th>
+      <th>city</th>
+      <th>country</th>
+      <th>screenshot</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Event</td>
+      <td>Asia Crypto Week</td>
+      <td>TOKEN2049</td>
+      <td>2021-11-22</td>
+      <td>2021-11-28</td>
+      <td>https://www.asiacryptoweek.com/</td>
+      <td>media@token2049.com</td>
+      <td>To Be Determined</td>
+      <td>To Be Determined</td>
+      <td></td>
+      <td>HK</td>
+      <td>https://assets.coingecko.com/events/screenshot/518/original/hk_event.JPG?1624604296</td>
+    </tr>
+  </tbody>
+</table>"
+2,"TOKEN2049 assembles leading founders and executives to highlight the latest evolution of cryptocurrency and blockchain technology. Experts from all over the globe converge to share their views on the market while attendees learn from the industry’s top pioneers and innovators.
+ 
+Meet crypto’s early founders and believers, as well as the leading voices of today, in one of two global market epicenters: London and Hong Kong. TOKEN2049 is uniting entrepreneurs, investors, developers, industry enthusiasts and global media - and creates unparalleled networking potential.
+
+This is the community that will define what’s next in the space.","<table border=""1"" class=""dataframe"">
+  <thead>
+    <tr style=""text-align: center;"">
+      <th></th>
+      <th>type</th>
+      <th>title</th>
+      <th>organizer</th>
+      <th>start_date</th>
+      <th>end_date</th>
+      <th>website</th>
+      <th>email</th>
+      <th>venue</th>
+      <th>address</th>
+      <th>city</th>
+      <th>country</th>
+      <th>screenshot</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Event</td>
+      <td>TOKEN2049 Hong Kong</td>
+      <td>TOKEN2049</td>
+      <td>2021-11-23</td>
+      <td>2021-11-24</td>
+      <td>https://www.asia.token2049.com/</td>
+      <td>media@token2049.com</td>
+      <td>Kerry Hotel by Shangri-La</td>
+      <td>38 Hung Luen Road, Hung Hom Bay, Kowloon, Hong Kong</td>
+      <td>Kowloon</td>
+      <td>HK</td>
+      <td>https://assets.coingecko.com/events/screenshot/516/original/token_2049_hk.JPG?1624603255</td>
+    </tr>
+  </tbody>
+</table>"

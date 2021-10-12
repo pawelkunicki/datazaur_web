@@ -2,35 +2,28 @@ from django.shortcuts import render
 from django.conf import settings
 import requests
 import pandas as pd
+import investpy
 import os
-from pycoingecko import CoinGeckoAPI
+from utils.other_data import *
 # Create your views here.
 
 
 
 def news(request):
-    api_key = os.environ.get('CRYPTOCOMPARE_API_KEY')
-    url = f'https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key={api_key}'
-
-    df = pd.json_normalize(requests.get(url).json()['Data'])[['published_on', 'title', 'url', 'source', 'body',
-                                                              'categories']]
-    df.loc[:, 'body'] = df.loc[:, 'body'].apply(lambda x: x[:320] + '...')
-
-    df['title'] = df.apply(lambda x: f"""<a href="{x['url']}">{x['title']}</a>""", axis=1)
-    df['published_on'] = df['published_on'].apply(lambda x: pd.to_datetime(x*10**9), True)
-    df.drop('url', axis=1, inplace=True)
-    df.columns = ['Date', 'Title', 'Source', 'Text', 'Categories']
-    context = {'news': df.to_html(justify='center', escape=False)}
+    news = cryptocomp_news()
+    context = {'news': news.to_html(justify='center', escape=False)}
     return render(request, 'news/news.html', context)
 
-
+def crypto(request):
+    news = cryptocomp_news()
+    context = {'news': news.to_html(justify='center', escape=False)}
+    return render(request, 'news/crypto.html', context)
 
 
 def events(request):
     context = {}
-    gecko = CoinGeckoAPI()
-    events = gecko.get_events()['data']
-    context['events'] = pd.DataFrame(index=events[0].keys(), data={item['title']: item for item in events}).transpose().to_html(escape=False, justify='left')
+
+    context['events'] = gecko_events()
 
     return render(request, 'news/events.html', context)
 
@@ -38,5 +31,9 @@ def events(request):
 def calendar(request):
     context = {}
 
+    context['calendar'] = investpy.economic_calendar().to_html(escape=False, justify='center')
 
     return render(request, 'news/calendar.html', context)
+
+
+

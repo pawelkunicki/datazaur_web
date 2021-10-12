@@ -17,5 +17,4 @@ urlpatterns = [
     path('funds/', views.funds, name='funds'),
     path('etfs/', views.etfs, name='etfs'),
     path('commodities/', views.commodities, name='commodities'),
-    path('trends/', views.trends, name='trends'),
     ]
