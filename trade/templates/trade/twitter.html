@@ -1,0 +1,46 @@
+{% extends 'trade/trade.html' %}
+
+{% block searchbar %}
+<div id="tweet_counter">
+    <form id="tweet_count_form" method="get" action="?query">
+        <input id="tweet_count_input" name="search_query" type="text" placeholder="#ETH / BTC / bitcoin">
+        <label id="granularity_label">
+            Granularity
+        </label>
+        <select id="granularity_select" name="granularity">
+            <option id="m" value="minute"> Minute </option>
+            <option id="h" value="hour"> Hour </option>
+            <option id="d" value="day"> Day </option>
+        </select>
+        <button id="tweet_count_button" type="submit">
+            Count tweets!
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div id="tweet_count_results">
+    {% if info %}
+        <p> Search query: {{ info.query }} </p>
+        <p> Start date: {{ info.start_date }} </p>
+        <p> End date: {{ info.end_date }} </p>
+        <p> Total count: {{ info.total_count }} </p>
+    {% endif %}
+
+    {{ table |safe }}
+</div>
+<div id="tweet_count_chart">
+
+
+
+</div>
+{% endblock %}
+
+
+
+{% block js %}
+
+{% endblock %}
+

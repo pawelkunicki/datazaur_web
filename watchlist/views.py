@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import AddToPortfolio, ChangeCurrency
 from .models import Watchlist, WatchlistCoins, Portfolio, Amounts
 from markets.models import Currency
+from crypto.models import Cryptocurrency
 from utils.portfolio_value import get_portfolio_value
 from website.models import UserProfile
 
@@ -16,7 +17,8 @@ def watchlist(request):
     context = {}
     profile = UserProfile.objects.get(user=request.user)
     portfolio = Portfolio.objects.get(user=profile)
-    coins = Amounts.objects.filter(portfolio=portfolio)
+    coins = Cryptocurrency.objects.all()
+    coins_in_pf = Amounts.objects.filter(portfolio=portfolio)
 
     if request.method == 'POST' and 'add' in str(request.POST):
         add_form = AddToPortfolio(request.POST)
@@ -33,7 +35,7 @@ def watchlist(request):
                 new_amount.save()
         else:
             print(f'errors: {add_form.errors}')
-        return HttpResponseRedirect(reverse('portfolio:portfolio', args=()))
+        return HttpResponseRedirect(reverse('watchlist:watchlist', args=()))
 
     elif request.method == 'POST' and 'currency' in str(request.POST):
         chg_form = ChangeCurrency(request.POST)
@@ -47,7 +49,7 @@ def watchlist(request):
                 portfolio.save()
         else:
             print(f'errors: {chg_form.errors}')
-        return HttpResponseRedirect(reverse('portfolio:portfolio', args=()))
+        return HttpResponseRedirect(reverse('watchlist:watchlist', args=()))
 
 
     else:
@@ -57,11 +59,12 @@ def watchlist(request):
         context['currency'] = portfolio.currency
         context['portfolio'] = portfolio
         context['coins'] = coins
+        context['coins_in_pf'] = coins_in_pf
         print(list(coins))
         try:
-            context['value'] = get_portfolio_value(coins, portfolio.currency)
+            context['value'] = get_portfolio_value(coins_in_pf, portfolio.currency)
         except Exception as e:
             context['value'] = 0
 
-    return render(request, 'portfolio/portfolio.html', context)
+    return render(request, 'watchlist/watchlist.html', context)
 

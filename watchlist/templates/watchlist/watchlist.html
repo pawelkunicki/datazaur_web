@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'website/base.html' %}
 
-</body>
-</html>
+
+{% block searchbar %}
+{% endblock %}
+
+{% block content %}
+
+<div id="watchlist">
+
+    <div id="watchlist_table_div">
+        <h3>
+            Your watchlist
+        </h3>
+        {% include 'watchlist/_watchlist_table.html' %}
+    </div>
+
+    <div id="watchlist_forms_div">
+        <div id="watchlist_chg_curr">
+            {% include 'watchlist/_change_currency_form.html' %}
+        </div>
+        <div id="add_coin_div">
+            {% include 'watchlist/_add_coin_form.html' %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+    {% if notification %}
+        <script type="text/javascript">
+            let text = "{{ notification }}";
+            alert(text);
+        </script>
+    {% endif %}
+
+<script src="{% static 'selectize.js' %}" type="text/javascript">
+</script>
+<script src="{% static 'js/currentlySelected.js' %}" type="text/javascript">
+</script>
+<script src="{% static 'js/findChecked.js' %}" type="text/javascript">
+</script>
+{% endblock %}
+

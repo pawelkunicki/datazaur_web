@@ -23,9 +23,9 @@ def all_markets_data(refresh_rate=REFRESH_RATE):
     data = {}
     coins_file = FILES['crypto']
     if compare_timestamps(refresh_rate, coins_file):
-        coins_data = pd.read_csv(coins_file, index_col=0).iloc[:20, :7]
+        coins_data = pd.read_csv(coins_file, index_col=0).iloc[:20, :8]
     else:
-        coins_data = coins_by_mcap().iloc[:20, :7]
+        coins_data = coins_by_mcap().iloc[:20, :8]
     print(coins_data.columns)
     coins_data['24h Δ'] = coins_data['24h Δ'].astype(str) + coins_data['24h %Δ'].apply(lambda x: f'({x})')
     data['crypto'] = prepare_df_display(coins_data.iloc[:, :4]).to_html(escape=False, justify='center')

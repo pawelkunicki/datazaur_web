@@ -7,8 +7,9 @@
     <a href="{% url 'crypto:crypto' %}" class="w3-bar-item w3-button w3-padding-large"> Crypto </a>
     <a href="{% url 'watchlist:watchlist' %}" class="w3-bar-item w3-button w3-padding-large">Watchlist</a>
     <a href="{% url 'news:news' %}" class="w3-bar-item w3-button w3-padding-large">News</a>
+    <a href="{% url 'news:calendar' %}" class="w3-bar-item w3-button w3-padding-large"> Calendar </a>
     <a href="{% url 'macro:macro' %}" class="w3-bar-item w3-button w3-padding-large"> Macro </a>
-    <a href="{% url 'macro:calendar' %}" class="w3-bar-item w3-button w3-padding-large"> Calendar </a>
+    <a href="{% url 'fundamentals:fundamentals' %}" class="w3-bar-item w3-button w3-padding-large"> Fundamentals </a>
     <a href="{% url 'messenger:messenger' %}" class="w3-bar-item w3-button w3-padding-large"> Messenger </a>
     <a href="{% url 'website:downloads' %}" class="w3-bar-item w3-button w3-padding-large">Downloads</a>
     {% if user.is_authenticated %}

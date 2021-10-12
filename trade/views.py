@@ -1,10 +1,11 @@
+
 from django.shortcuts import render
 from django.conf import settings
 from .forms import TradeForm
 from .models import SavedExchanges
 from website.models import UserProfile
 from crypto.models import Exchange, ExchangeCoins
-
+from utils.count_tweets import tweet_count
 # Create your views here.
 
 
@@ -132,6 +133,22 @@ def history(request):
         pass
 
     return render(request, 'trading/history.html', context)
+
+
+
+def twitter(request):
+    context = {}
+    print(request.GET)
+    if request.method == 'GET' and 'query' in str(request.GET):
+        query = {'query': request.GET['search_query'], 'granularity': request.GET['granularity']}
+        table = tweet_count(query)
+        context['table'] = table.to_html(escape=False, justify='center')
+        context['info'] = {'query': query['query'],
+                           'start_date': table.loc[0, 'start'],
+                           'end_date': table['end'].values[-1],
+                           'total_count': sum(table['tweet_count'])}
+
+    return render(request, 'trade/twitter.html', context)
 
 
 

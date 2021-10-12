@@ -10,6 +10,7 @@ urlpatterns = [
     path('momentum/', views.momentum, name='momentum'),
     path('arbitrage/', views.arbitrage, name='arbitrage'),
     path('history/', views.history, name='history'),
+    path('twitter/', views.twitter, name='twitter'),
     ]
 
 
