@@ -5,7 +5,8 @@ from .forms import TradeForm
 from .models import SavedExchanges
 from website.models import UserProfile
 from crypto.models import Exchange, ExchangeCoins
-from utils.count_tweets import tweet_count
+from utils.count_tweets import *
+import ccxt
 # Create your views here.
 
 
@@ -140,13 +141,34 @@ def twitter(request):
     context = {}
     print(request.GET)
     if request.method == 'GET' and 'query' in str(request.GET):
-        query = {'query': request.GET['search_query'], 'granularity': request.GET['granularity']}
-        table = tweet_count(query)
+        symbol = request.GET['search_query']
+        granularity = request.GET['granularity']
+        query = {'query': symbol, 'granularity': granularity}
+        table, since = tweet_count(query)
         context['table'] = table.to_html(escape=False, justify='center')
         context['info'] = {'query': query['query'],
                            'start_date': table.loc[0, 'start'],
                            'end_date': table['end'].values[-1],
                            'total_count': sum(table['tweet_count'])}
+
+        intervals = {'hour': '1h', 'minute': '1m', 'day': '1d'}
+        interval = intervals[granularity]
+        exchange = settings.DEFAULT_EXCHANGE
+        currency = settings.DEFAULT_CURRENCY
+        ticker = symbol.replace('#', '').upper() + '/' + currency + 'T'
+        prices = get_prices(ticker, exchange, interval, since)
+        prices[0] = prices[0].apply(lambda x: ccxt.Exchange.iso8601(x)[:16].replace('T', ' '))
+        prices.columns = ['start', 'Open', 'High', 'Low', 'Close', 'Volume']
+
+        joined_table = table.set_index('start').join(prices.set_index('start')).dropna()
+        #joined_table['tweet_delta'][1:] = joined_table['tweet_count'][1:].apply(lambda x: ((100 * x - joined_table['tweet_count'][x-1]) / joined_table['tweet_count'][x-1]))
+        joined_table['tweet_delta'] = 100 * (joined_table['tweet_count'] - joined_table['tweet_count'].shift()) / joined_table['tweet_count'].shift()
+        joined_table['close_delta'] = 100 * (joined_table['Close'] - joined_table['Open']) / joined_table['Open']
+
+
+        context['corr'] = get_corr_matrix(joined_table.iloc[:, 1:]).to_html(escape=False, justify='center')
+
+        context['joined_table'] = joined_table.to_html(escape=False, justify='center')
 
     return render(request, 'trade/twitter.html', context)
 

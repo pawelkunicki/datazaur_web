@@ -381,4 +381,5 @@ canvas{height: 1200px; width: 800px}
 #tweet_counter{position:absolute; top:100px; left:10px}
 #tweet_count_results{position:absolute; top:150px; left:10px}
 #tweet_count_form{}
-
+#tweets_table{float:left}
+#tweets_prices{float:right}

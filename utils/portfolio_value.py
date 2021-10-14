@@ -1,5 +1,5 @@
 from forex_python.converter import CurrencyRates
-from backup.crypto_monitor import *
+from .crypto_data import *
 from utils.compare_timestamps import compare_timestamps
 from django.conf import settings
 

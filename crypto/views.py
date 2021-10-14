@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render
-from backup.crypto_monitor import *
+from utils.crypto_data import *
 from .models import Cryptocurrency
 from utils.compare_timestamps import compare_timestamps
 from utils.charts import Chart

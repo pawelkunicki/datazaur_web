@@ -22,14 +22,20 @@
 
 {% block content %}
 <div id="tweet_count_results">
-    {% if info %}
-        <p> Search query: {{ info.query }} </p>
-        <p> Start date: {{ info.start_date }} </p>
-        <p> End date: {{ info.end_date }} </p>
-        <p> Total count: {{ info.total_count }} </p>
-    {% endif %}
+    <div id="tweets_info">
+        {% if info %}
+            <p> Search query: {{ info.query }} </p>
+            <p> Start date: {{ info.start_date }} </p>
+            <p> End date: {{ info.end_date }} </p>
+            <p> Total count: {{ info.total_count }} </p>
+            <p> Correlations: {{ corr |safe }} </p>
+        {% endif %}
+    </div>
+    <div id="tweets_table">
+        {{ joined_table |safe }}
+    </div>
 
-    {{ table |safe }}
+
 </div>
 <div id="tweet_count_chart">
 

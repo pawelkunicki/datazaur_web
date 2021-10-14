@@ -3,7 +3,7 @@ from watchlist.models import Watchlist
 
 from markets.models import Currency
 from crypto.models import Cryptocurrency, Exchange
-from backup.crypto_monitor import *
+from .crypto_data import *
 from django.conf import settings
 
 FX_FILE = 'static/data/iso-4217-currency-codes.csv'
