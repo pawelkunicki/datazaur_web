@@ -272,8 +272,7 @@ hr{border:0;border-top:1px solid #eee;margin:20px 0}
 #content{position:absolute; left:5px; top:10px; width:1800px; height:1200px; padding:30px}*/
 #sidebar_div{position:absolute; top:260px; left:5px; width:120px}
 
-#news_searchbar{position:absolute; top:50px; left:5px; height:40px; width:200px}
-
+#search_box_div{position:absolute; top:50px; left:5px; height:40px; width:200px}
 #searchbar{position:absolute; top:50px; left:5px; height:40px; width:200px}
 
 #download_page{position:relative; top:-40px}
@@ -319,12 +318,6 @@ h2{font-family:sans bold}
 #add_coin_button{width:40%; height:77%}
 
 
-
-
-
-
-
-
 #trends_div{display:flex}
 #trends_options{position:absolute; top:5px; right:30px; font-size:18px}
 #gainers_table{float:left; padding:2px}
@@ -335,9 +328,16 @@ h2{font-family:sans bold}
 #global_metrics_table{height:1200px; width:1000px}
 canvas{height: 1200px; width: 800px}
 
-#news_div{position:absolute; top:85px; left:15px}
+#news_div{position:absolute; top:100px; left:10px}
+#news_searchbar{position:absolute; top:5px; width:100%; height:10%}
 
+#filter_websites{float:left}
+#saved_websites{position:absolute; left:300px; top:55px}
+#add_website_div{position:absolute; left: 10px; top:60px; height: 30px; width:600px}
+#saved_websites_div{position:absolute; left:10px; top:120px}
 
+#crypto_news{float:right}
+#scrapped_news{float:left}
 
 #exchanges_div{position:absolute; top:40px; right:40px; align-items:center}
 #connected_exchanges{position:absolute; top:80px; right:40px}

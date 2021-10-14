@@ -4,34 +4,38 @@ import yaml
 import os
 import sys
 
-class NewsScrapper:
-    def __init__(self):
-        self.websites = None
-        self.load_websites()
+filename = 'scrapper_selectors.yaml'
 
 
-    def load_websites(self):
-        try:
-            with open(os.path.join(os.path.dirname(os.getcwd()), 'settings', 'scrapper_selectors.yaml'), 'r') as file:
-                self.websites = yaml.safe_load(file)
-        except:
-            return
+def load_websites():
+    try:
+        with open(filename, 'r') as file:
+            return yaml.safe_load(file)
+    except Exception:
+        return None
 
 
-    def scrap_news(self, website, pages=None):
+def scrap_news():
+    result = {}
+    for website, selectors in load_websites().items():
+        result[website] = []
         req = requests.get(website).text
         soup = BeautifulSoup(req, features='lxml')
-        articles = soup.select(self.websites[website])
-        return [article.a for article in articles]
+        for selector in selectors:
+            articles = soup.select(selector)
+            #result[website].append([[article.a.text, article.a.get('href')] for article in articles])
+            result[website].append(f'<a href="{article.a.get("href")}"> {article.a.text} </a>' for article in articles)
+
+    return result
 
 
-    def add_website(self, url, selectors):
-        if url in self.websites.keys():
-            return False
-        self.websites[url] = selectors
-        with open(SCRAPPER_SELECTORS_FILE, 'a') as file:
+def add_website(url, selectors):
+    if url in load_websites().keys():
+        return 'Site already saved.'
+    else:
+        with open(filename, 'a') as file:
             yaml.dump({url: selectors}, file)
-        print('git')
+        print('added')
 
 
 

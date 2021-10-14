@@ -161,7 +161,6 @@ def twitter(request):
         prices.columns = ['start', 'Open', 'High', 'Low', 'Close', 'Volume']
 
         joined_table = table.set_index('start').join(prices.set_index('start')).dropna()
-        #joined_table['tweet_delta'][1:] = joined_table['tweet_count'][1:].apply(lambda x: ((100 * x - joined_table['tweet_count'][x-1]) / joined_table['tweet_count'][x-1]))
         joined_table['tweet_delta'] = 100 * (joined_table['tweet_count'] - joined_table['tweet_count'].shift()) / joined_table['tweet_count'].shift()
         joined_table['close_delta'] = 100 * (joined_table['Close'] - joined_table['Open']) / joined_table['Open']
 
