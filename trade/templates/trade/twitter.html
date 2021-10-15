@@ -37,6 +37,15 @@
 
 
 </div>
+<div id="tweets_chart">
+    <h2>
+        Price vs tweets: {{ info.query }}
+    </h2>
+    {{ table |safe }}
+
+</div>
+
+
 <div id="tweet_count_chart">
 
 
@@ -47,6 +56,10 @@
 
 
 {% block js %}
-
+    <script type="text/javascript">
+      $(document).ready(function(){
+        {{ js_scripts |safe }}
+        });
+    </script>
 {% endblock %}
 

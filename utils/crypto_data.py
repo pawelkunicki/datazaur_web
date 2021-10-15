@@ -4,8 +4,8 @@ import requests
 import os
 import json
 from django.conf import settings
-
-
+from utils.decorators import prep_crypto_display, load_or_save
+from .formatting import prepare_df_display
 
 coins_file = settings.CRYPTO_FILE
 currency = settings.DEFAULT_CURRENCY
@@ -23,6 +23,8 @@ def get_coins_info():
                                                                        'IsUsedInDefi', 'IsUsedInNft']]
     return data
 
+
+@load_or_save('crypto.csv', 1200)
 def top_coins_by_mcap():
     url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={currency}&api_key={api_key}'
     cols = f'CoinInfo.Name CoinInfo.FullName CoinInfo.Url RAW.{currency}.PRICE ' \
@@ -30,43 +32,17 @@ def top_coins_by_mcap():
            f'RAW.{currency}.TOTALVOLUME24HTO ' \
            f'RAW.{currency}.MKTCAP RAW.{currency}.SUPPLY RAW.{currency}.LASTUPDATE'.split()
     df = pd.json_normalize(requests.get(url).json()['Data']).loc[:, cols]
-    df = prepare_df_save(df)
-    df.to_csv(coins_file)
-    df = prepare_df_display(df, cols_to_split=[2, 5, 6, 7], upd_col=True, round_decimals=6)
-    return df
-
-
-
-def add_hyperlinks(df):
-    for col in ['Symbol', 'Name']:
-        df[col] = df.apply(lambda x: f"""<a href={base_cryptocompare_url + x['Url']}>{x[col]}</a>""", axis=1)
-    return df
-
-
-def color_prices(x):
-    return f"""<p class=green>{x}%</p>""" if x >= 0 else f"""<p class=red>{x}%</p>"""
-
-
-def prepare_df_display(df, cols_to_split, upd_col, round_decimals):
-    df = add_hyperlinks(df)
-    if 'Url' in df.columns:
-        df.drop('Url', inplace=True, axis=1)
-    df[['1h Δ', '24h Δ']] = df[['1h Δ', '24h Δ']].round(2)
-    df.iloc[:, 3:5] = df.iloc[:, 3:5].applymap(color_prices)
-    df.loc[:, ['Price']] = df.loc[:, ['Price']].astype('float64')
-    df.loc[:, ['Price']] = df.loc[:, ['Price']].round(round_decimals)
-    df.iloc[:, cols_to_split] = df.iloc[:, cols_to_split].applymap(lambda x: format(x, ','))
-    if upd_col:
-        df['Updated'] = df['Updated'].apply(lambda x: pd.to_datetime(x * 10 ** 9))
-    return df
-
-def prepare_df_save(df):
     df.columns = ['Symbol', 'Name', 'Url', 'Price', '1h Δ', '24h Δ', '24h vol', f'Market cap ({currency})',
                   'Supply', 'Updated']
     df.dropna(inplace=True)
+    df.iloc[:, 3:6] = df.iloc[:, 3:6].astype('float64').round(3)
     df.iloc[:, 6:9] = df.iloc[:, 6:9].astype('int64')
-    return df
 
+    return prepare_df_display(df)
+
+
+
+@load_or_save('exchanges.csv', 86400)
 def exchanges_by_vol():
     url = f'https://min-api.cryptocompare.com/data/exchanges/general?api_key={api_key}&tsym={currency}'
     df = pd.DataFrame(requests.get(url).json()['Data']).transpose()[

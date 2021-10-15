@@ -1,7 +1,16 @@
 {% extends 'crypto/crypto.html' %}
 
 {% block searchbar %}
-
+    <div id="trends_options">
+        <label>
+            Timeframe
+        </label>
+        <select id="trends_timeframes" onchange="changeTimeframe();">
+            {% for timeframe in timeframes %}
+                <option> {{ timeframe }}</option>
+            {% endfor %}
+        </select>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -19,16 +28,7 @@
         </h2>
         {{ losers_table |safe }}
     </div>
-    <div id="trends_options">
-        <label>
-            Timeframe
-        </label>
-        <select id="trends_timeframes" onchange="changeTimeframe();">
-            {% for timeframe in timeframes %}
-                <option> {{ timeframe }}</option>
-            {% endfor %}
-        </select>
-    </div>
+
 </div>
 {% endblock %}
 

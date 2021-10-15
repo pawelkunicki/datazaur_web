@@ -23,33 +23,34 @@ def string_to_float(x):
     if type(x) == str:
         return float(x.replace('%', '').replace('+', ''))
 
-def round_strings(cell):
-    abs_integer = cell.split()[0].split('.')[0]
-    abs_decimal = cell.split()[0].split('.')[1]
-
-    pct_integer = cell.split()[1].split('.')[0]
-    pct_decimal = cell.split()[1].split('.')[1]
-
-    return f'{abs_integer}.{abs_decimal[:3]} ({pct_integer}.{pct_decimal[:3]})%'
 
 
 def color_cell(x):
-    if '-' in str(x):
+    sign = str(x)[0]
+    if sign == '-':
         color = 'red'
+        pref = ''
     else:
         color = 'green'
-    return f"""<p class={color}>{x}</p>"""
+        pref = '+'
+    if '%' in str(x):
+        return f"""<p class={color}>({pref}{x})</p>"""
+    else:
+        return f"""<p class={color}>{pref}{x}</p>"""
 
-def prepare_df_display(df):
-    df[['Price', '24h Δ', '24h %Δ']] = df[['Price', '24h Δ', '24h %Δ']].astype('float64').round(3).applymap(lambda x: format(x, ','))
 
-    delta_cols = [col for col in df.columns if 'Δ' in col]
-    if delta_cols:
-        df[delta_cols] = df[delta_cols].applymap(color_cell)
+def prepare_df_display(df, n_decimals=3):
+    for col in df.columns:
+        if 'Price' in col or 'Δ' in col or 'vol' in col or 'cap' in col or 'Supply' in col:
+            df[col] = df[col].apply(lambda x: format(float(x.replace(',', '')).__round__(n_decimals), ',') if type(x) == str else
+                                    format(float(x).__round__(n_decimals), ','))
+            if 'Δ' in col:
+                df[col] = df[col].apply(color_cell)
 
-    df = add_hyperlinks(df)
     if 'Url' in df.columns:
+        df = add_hyperlinks(df)
         df.drop('Url', inplace=True, axis=1)
+
     if 'Updated' in df.columns:
         df['Updated'] = df['Updated'].apply(lambda x: pd.to_datetime(x * 10 ** 9))
     return df

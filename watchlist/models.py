@@ -23,8 +23,8 @@ class Watchlist(models.Model):
     user = models.ForeignKey('website.UserProfile', blank=False, null=False, related_name='watchlist_userprofile', on_delete=models.CASCADE)
     currency = models.ForeignKey('markets.Currency', blank=True, null=True, related_name='watchlist_currency',
                                  on_delete=models.CASCADE)
-    coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_cryptocurrency',
-                                    through='watchlistcoins', through_fields=('watchlist', 'coin'))
+    coins = models.ManyToManyField('crypto.Cryptocurrency', null=True, blank=True, related_name='watchlist_cryptocurrency',
+                                   through='watchlist.Watchlistcoins', through_fields=('watchlist', 'coin'))
 
 
 

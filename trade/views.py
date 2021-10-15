@@ -1,12 +1,17 @@
 
 from django.shortcuts import render
 from django.conf import settings
-from .forms import TradeForm
+from .forms import TradeForm, FindQuote, ConnectForm
 from .models import SavedExchanges
 from website.models import UserProfile
 from crypto.models import Exchange, ExchangeCoins
+from utils.charts import Chart
 from utils.count_tweets import *
+from utils.random_color import *
+from utils.formatting import *
 import ccxt
+import numpy as np
+import pandas as pd
 # Create your views here.
 
 
@@ -15,7 +20,7 @@ def trade(request):
     context['sidebar_items'] = zip(('Algorithms', 'Arbitrage', 'History'), ('algorithms', 'arbitrage', 'history'))
     context['trade_form'] = TradeForm()
     context['exchanges'] = Exchange.objects.all()
-
+    context['conn_form'] = ConnectForm()
 
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
@@ -31,11 +36,19 @@ def trade(request):
 
 
     if request.method == 'GET':
+        print(request.GET)
+        if 'exchange' in str(request.GET):
+            exchange = getattr(ccxt, Exchange.objects.get(id=request.GET['exchange']).name)()
+            markets = pd.DataFrame(exchange.fetch_tickers()).transpose()[['last', 'percentage', 'quoteVolume']]
+            markets.columns = ['Price', '24h Δ', 'volume']
+            markets = prepare_df_display(markets)
+            context['markets'] = markets.to_html(escape=False, justify='center')
+
+
         context['ticker'] = request.GET['ticker'] if 'ticker' in str(request.GET) else None
 
 
     elif request.method == 'POST':
-
         if 'buy' in str(request.POST):
             context['ticker'] = request.POST['ticker']
             buy_form = TradeForm(request.POST)
@@ -53,15 +66,22 @@ def trade(request):
             else:
                 print(f'errors: {sell_form.errors}')
 
-        elif 'connect' in str(request.POST):
+        elif request.user.is_authenticated and 'connect' in str(request.POST):
             print(request.POST)
-            exchange = Exchange.objects.get(id=request.POST['exchange_input'])
-            if SavedExchanges.objects.filter(user=profile, exchange=exchange).exists():
-                pass
+            conn_form = ConnectForm(request.POST)
+            if conn_form.is_valid():
+                form_data = conn_form.cleaned_data
+                exchange = Exchange.objects.get(id=form_data['exchange'])
+                if SavedExchanges.objects.filter(user=profile, exchange=exchange).exists():
+                    pass
+                else:
+                    SavedExchanges.objects.create(user=profile, exchange=exchange).save()
+                    print(f'saved exchange: {exchange}')
             else:
-                SavedExchanges.objects.create(user=profile, exchange=exchange).save()
+                print(conn_form.errors)
 
-                print(f'saved exchange: {exchange}')
+            context['conn_exchanges'] = SavedExchanges.objects.filter(user=profile)
+            return render(request, 'trade/trade.html', context)
 
         elif 'disconnect' in str(request.POST):
             exchange = Exchange.objects.get(id=request.POST['exchange_input'])
@@ -101,7 +121,7 @@ def cointegration(request):
 
 def momentum(request):
     context = {}
-
+    context['find_quote'] = FindQuote()
     if request.method == 'GET':
 
         return render(request, 'trade/momentum.html', context)
@@ -138,7 +158,7 @@ def history(request):
 
 
 def twitter(request):
-    context = {}
+    context = {'info': {'query': ''}}
     print(request.GET)
     if request.method == 'GET' and 'query' in str(request.GET):
         symbol = request.GET['search_query']
@@ -161,13 +181,26 @@ def twitter(request):
         prices.columns = ['start', 'Open', 'High', 'Low', 'Close', 'Volume']
 
         joined_table = table.set_index('start').join(prices.set_index('start')).dropna()
-        joined_table['tweet_delta'] = 100 * (joined_table['tweet_count'] - joined_table['tweet_count'].shift()) / joined_table['tweet_count'].shift()
-        joined_table['close_delta'] = 100 * (joined_table['Close'] - joined_table['Open']) / joined_table['Open']
-
+        #joined_table['tweet_delta'] = 100 * (joined_table['tweet_count'] - joined_table['tweet_count'].shift()) / joined_table['tweet_count'].shift()
+        #joined_table['close_delta'] = 100 * (joined_table['Close'] - joined_table['Open']) / joined_table['Open']
+        joined_table['tweet_delta'] = np.log(joined_table['tweet_count'] / joined_table['tweet_count'].shift())
+        joined_table['close_delta'] = np.log(joined_table['Close'] / joined_table['Close'].shift())
 
         context['corr'] = get_corr_matrix(joined_table.iloc[:, 1:]).to_html(escape=False, justify='center')
-
         context['joined_table'] = joined_table.to_html(escape=False, justify='center')
+
+
+        df = joined_table[['tweet_delta', 'close_delta']]
+        PALETTE = [get_random_color() for col in df.columns]
+
+        chart = Chart('line', chart_id='tweets_price', palette=PALETTE)
+        chart.from_df(df, values=['close_delta', 'tweet_delta'], labels='start')
+        js_scripts = chart.get_js()
+        context['charts'] = []
+        context['charts'].append(chart.get_presentation())
+        context['table'] = chart.get_html()
+        context['js_scripts'] = js_scripts
+
 
     return render(request, 'trade/twitter.html', context)
 

@@ -1,8 +1,9 @@
 
 var checked_symbols = Array();
 
+
 function findChecked(){
-    let checkboxes = document.getElementsByTagName("input");
+    let checkboxes = document.getElementsByClassName("star");
     let checked = Array();
     for (item of checkboxes) {
         if (item.checked) {

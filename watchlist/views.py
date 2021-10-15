@@ -20,6 +20,10 @@ def watchlist(request):
     coins = Cryptocurrency.objects.all()
     coins_in_pf = Amounts.objects.filter(portfolio=portfolio)
 
+    if request.method == 'GET':
+        watchlist_coins = WatchlistCoins.objects.filter(watchlist=profile.watchlist)
+        context['watchlist_coins'] = watchlist_coins
+
     if request.method == 'POST' and 'add' in str(request.POST):
         add_form = AddToPortfolio(request.POST)
         if add_form.is_valid():

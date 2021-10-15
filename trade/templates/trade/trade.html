@@ -8,13 +8,42 @@
 
 {% endblock %}
 
+{% block sidebar %}
+    <div id="exchanges">
+        <h3>
+            Exchanges
+        </h3>
+        <form id="conn_exchange" method="post" action="#">
+            {{ conn_form.as_p }}
+            {% csrf_token %}
+            <button id="conn_button" type="submit" name="connect" value="connect">
+                Connect
+            </button>
+        </form>
+
+        <ul id="connected_exchanges">
+            {% for exchange in conn_exchanges %}
+                <li id="{{ exchange.exchange.id }}">
+                    <a href="/trade/trade?exchange={{ exchange.exchange.id }}">
+                        {{ exchange.exchange.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="exchange_markets">
+        {{ markets |safe }}
+    </div>
+{% endblock %}
 
 {% block content %}
 
 {% endblock %}
 
 {% block js %}
-
+    <script type="text/javascript">
+        {{ js_scripts }}
+    </script>
 {% endblock %}
 
 

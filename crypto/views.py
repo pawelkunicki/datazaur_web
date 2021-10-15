@@ -8,7 +8,9 @@ from utils.random_color import get_random_color
 from utils.crypto_data import exchanges_by_vol, top_coins_by_mcap
 from utils.market_data import *
 from utils.other_data import *
+from utils.formatting import *
 from watchlist.models import Watchlist, WatchlistCoins, Portfolio, Amounts
+from markets.models import Currency
 
 from website.models import UserProfile
 
@@ -20,24 +22,30 @@ EXCHANGES_FILE = settings.EXCHANGES_FILE
 
 def crypto(request):
     context = {}
+    context['currencies'] = Currency.objects.all()
     refresh_rate = settings.REFRESH_RATE
+    coin_ids = []
 
+    table = top_coins_by_mcap()
+    table['Watchlist'] = table['Symbol'].apply(lambda
+                                                   x: f"""<input type="checkbox" name="watch_{x}" id="watch_{x.split('</a>')[0].split('>')[1]}" class="star">""")
+    table['Portfolio'] = table['Symbol'].apply(lambda
+                                                   x: f""" <button type="submit" name="add_to_pf" value="{x.split('</a>')[0].split('>')[1]}"> Add </button>""")
+    context['table'] = table.to_html(escape=False, justify='center')
 
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
         watchlist = Watchlist.objects.get(user=profile)
         coins = WatchlistCoins.objects.filter(watchlist=watchlist)
+        print(coins)
         context['watchlist_ids'] = [c.coin.symbol for c in coins]
         if profile.currency:
             context['currency'] = profile.currency.symbol
-    else:
-        context['currency'] = settings.DEFAULT_CURRENCY
+        else:
+            context['currency'] = settings.DEFAULT_CURRENCY
 
-    if CRYPTO_FILE not in os.listdir() or not compare_timestamps(refresh_rate, CRYPTO_FILE):
-        table = top_coins_by_mcap()
-    else:
-        table = pd.read_csv(CRYPTO_FILE, index_col=0)
-        table = prepare_df_display(table)
+
+
 
     if request.method == 'POST' and not request.user.is_authenticated:
         return render(request, 'website/login_required.html', context)
@@ -61,25 +69,21 @@ def crypto(request):
     if request.method == 'POST' and request.is_ajax and 'checked_symbols' in str(request.POST):
         print('ajax2')
         print(request.POST)
-        watchlist = Watchlist.objects.get(user=profile)
+        watchlist = profile.watchlist
         WatchlistCoins.objects.filter(watchlist=watchlist).delete()
         symbols = request.POST['checked_symbols'].split(',')
-        new_ids = []
+        coin_ids = [symbol.split('_')[1] for symbol in symbols]
 
-        for symbol in symbols:
+        for symbol in coin_ids:
             if not Cryptocurrency.objects.filter(symbol=symbol).exists():
                 pass
             else:
                 coin = Cryptocurrency.objects.get(symbol=symbol)
                 if not WatchlistCoins.objects.filter(watchlist=watchlist, coin=coin).exists():
-                    coin_on_watchlist = WatchlistCoins.objects.create(watchlist=watchlist, coin=coin)
-                    coin_on_watchlist.save()
-                    new_ids.append(symbol)
+                    WatchlistCoins.objects.create(watchlist=watchlist, coin=coin).save()
+        context['watchlist_ids'] = coin_ids
 
-        context['watchlist_ids'] = new_ids
-
-    context['table'] = table.to_html(justify='center', escape=False)
-
+    print(context)
     return render(request, 'crypto/crypto.html', context)
 
 
@@ -119,7 +123,8 @@ def dominance(request):
         top_n_choices.insert(0, top_n_coins)
         PALETTE = [get_random_color() for i in range(top_n_coins)]
         df = pd.read_csv('crypto.csv', index_col=0).iloc[:top_n_coins][['Symbol', mcap_col]]
-        df['Dominance'] = df[mcap_col].apply(lambda x: float((100 * x)/sum(df[mcap_col])).__round__(4))
+        df[mcap_col] = df[mcap_col].apply(lambda x: x.replace(',', ''))
+        df['Dominance'] = df[mcap_col].apply(lambda x: 100 * float(x) / sum(df[mcap_col].astype('float64')))
         #df.loc[:, mcap_col] = list(map(lambda x: format(x, ','), df.loc[:, mcap_col]))
         chart = Chart('doughnut', chart_id='dominance_chart', palette=PALETTE)
         chart.from_df(df, values='Dominance', labels=list(df.loc[:, 'Symbol']))

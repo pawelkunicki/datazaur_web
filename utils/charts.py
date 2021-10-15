@@ -254,6 +254,9 @@ class Chart:
         if self.chart_type == 'radar':
             elements['type'] = 'radar'
 
+        if self.chart_type == 'line':
+            elements['type'] = 'line'
+
         return elements
 
     def get_js(self):

@@ -1,7 +1,17 @@
 {% extends 'trade/trade.html' %}
 
+{% block searchbar %}
+    <div id="momentum_search">
+        <form id="momentum_form" method="get" action="#">
+            {{ find_quote.as_p }}
+            <button type="submit" id="momentum_btn"> Search </button>
+        </form>
+    </div>
 
+{% endblock %}
+{% block sidebar %}
 
+{% endblock %}
 
 {% block content %}
 
