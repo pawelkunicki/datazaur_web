@@ -1,7 +1,9 @@
 
 
 $(document).ready(function () {
-    $('select').selectize({
+    let lol = $('#add_coin_dropdown');
+    console.log(lol);
+    lol.selectize({
       sortField: 'text'
         });
     });

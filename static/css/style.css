@@ -321,8 +321,8 @@ h2{font-family:sans bold}
 
 
 #add_coin_div{float:bottom; width:80%; height:30%}
-#add_coin_form{}
-#add_coin_dropdown{width:60%}
+#add_coin_form{width:200px}
+#add_coin_dropdown{width:50%; height:36px}
 #add_coin_button{width:40%; height:77%}
 
 

@@ -73,6 +73,7 @@ def log_in(request):
         return render(request, 'website/login.html', {'form': AuthenticationForm})
 
 
+
 def signup(request):
     context = {'form': UserCreationForm}
     context['currencies'] = Currency.objects.all()
@@ -84,17 +85,15 @@ def signup(request):
             user = User.objects.create_user(username=user_data['username'], password=user_data['password1'])
             user.save()
             profile = UserProfile.objects.create(user=user, currency=currency)
-
+            profile.save()
             request.session.set_expiry(86400)
             login(request, user)
             users_watchlist = Watchlist.objects.create(user=profile)
             users_watchlist.save()
             users_portfolio = Portfolio.objects.create(user=profile)
             users_portfolio.save()
-            profile.save()
-
-            context['user'] = user
             return render(request, 'website/home.html', context)
+
         else:
             print(user_form.errors)
             context['errors'] = dict(user_form.errors)

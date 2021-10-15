@@ -14,11 +14,12 @@ class UserProfile(models.Model):
     portfolio = models.ForeignKey('watchlist.Portfolio', related_name='userprofile_portfolio', on_delete=models.CASCADE, null=True, blank=True)
     watchlist = models.ForeignKey('watchlist.Watchlist', related_name='userprofile_watchlist', on_delete=models.CASCADE, null=True, blank=True)
     email = models.CharField(max_length=32, null=True, blank=True)
-    exchanges = models.ManyToManyField('crypto.Exchange', related_name='userprofile_exchanges')
-    friends = models.ManyToManyField('self', related_name='userprofile_friends')
+    exchanges = models.ManyToManyField('crypto.Exchange', blank=True, related_name='userprofile_exchanges')
+    friends = models.ManyToManyField('self', blank=True, related_name='userprofile_friends')
     #online = models.BooleanField(default=False)
     #last_login = models.IntegerField(default=0)
-
+    def __str__(self):
+        return self.user.username + 'profile'
 
 class FriendLists(models.Model):
     user = models.ForeignKey('website.UserProfile', related_name='friendlists_user', on_delete=models.CASCADE, null=False)

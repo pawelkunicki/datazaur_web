@@ -10,6 +10,7 @@ from utils.market_data import *
 from utils.other_data import *
 from utils.formatting import *
 from watchlist.models import Watchlist, WatchlistCoins, Portfolio, Amounts
+from watchlist.forms import AddCoin
 from markets.models import Currency
 
 from website.models import UserProfile
@@ -34,11 +35,13 @@ def crypto(request):
     context['table'] = table.to_html(escape=False, justify='center')
 
     if request.user.is_authenticated:
-        profile = UserProfile.objects.get(user=request.user)
-        watchlist = Watchlist.objects.get(user=profile)
+        profile = UserProfile.objects.filter(user=request.user).first()
+        watchlist = Watchlist.objects.filter(user=profile).first()
         coins = WatchlistCoins.objects.filter(watchlist=watchlist)
+
         print(coins)
-        context['watchlist_ids'] = [c.coin.symbol for c in coins]
+        context['watchlist_ids'] = [c.coin.symbol.lower() for c in coins]
+        print(context['watchlist_ids'])
         if profile.currency:
             context['currency'] = profile.currency.symbol
         else:
@@ -68,19 +71,25 @@ def crypto(request):
 
     if request.method == 'POST' and request.is_ajax and 'checked_symbols' in str(request.POST):
         print('ajax2')
+        print(watchlist)
+        print(watchlist.user)
         print(request.POST)
-        watchlist = profile.watchlist
-        WatchlistCoins.objects.filter(watchlist=watchlist).delete()
-        symbols = request.POST['checked_symbols'].split(',')
-        coin_ids = [symbol.split('_')[1] for symbol in symbols]
 
+
+        symbols = request.POST['checked_symbols'].split(',')
+        coin_ids = [symbol.split('_')[1].lower() for symbol in symbols if '_' in symbol]
+        print(coin_ids)
         for symbol in coin_ids:
             if not Cryptocurrency.objects.filter(symbol=symbol).exists():
-                pass
+                print(f'coin {symbol} doesnt exist')
             else:
-                coin = Cryptocurrency.objects.get(symbol=symbol)
-                if not WatchlistCoins.objects.filter(watchlist=watchlist, coin=coin).exists():
-                    WatchlistCoins.objects.create(watchlist=watchlist, coin=coin).save()
+                coin = Cryptocurrency.objects.filter(symbol=symbol).first()
+                print(coin)
+                if not WatchlistCoins.objects.filter(watchlist=watchlist).filter(coin=coin).exists():
+                    new_coin = WatchlistCoins.objects.create(watchlist=watchlist, coin=coin)
+                    new_coin.save()
+                    print(new_coin)
+                    print(new_coin.coin)
         context['watchlist_ids'] = coin_ids
 
     print(context)

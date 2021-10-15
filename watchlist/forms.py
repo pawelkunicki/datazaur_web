@@ -1,7 +1,7 @@
 from .models import Watchlist
 from django import forms
 from markets.models import Currency
-from crypto.models import Cryptocurrency
+from crypto.models import Cryptocurrency, Exchange, ExchangeCoins
 
 
 class AddCoin(forms.Form):
@@ -29,11 +29,13 @@ class ChangeCurrency(forms.Form):
 class NewWatchlist(forms.Form):
     name = forms.CharField(label='Name', max_length=16)
     type = forms.ChoiceField(label='Type', choices=((1, 'Watchlist'), (2, 'Portfolio')))
-    base_currency = forms.ChoiceField(label='Currency')
+    currency = forms.ChoiceField(label='Currency', choices=())
+    source = forms.ChoiceField(label='Source', choices=())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['base_currency'].choices = [(c.symbol, c.name) for c in Currency.objects.all()]
+        self.fields['currency'].choices = [(c.symbol, c.name) for c in Currency.objects.all()]
+        self.fields['source'].choices = [(e.id, e.name) for e in Exchange.objects.all()]
 
 
 
@@ -44,3 +46,16 @@ class AddToPortfolio(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['coin'].choices = [(c.id, c.name) for c in Cryptocurrency.objects.all()]
+
+
+
+class SetSource(forms.Form):
+    source = forms.ChoiceField(label='Source', choices=())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['source'].choices = [(ex.id, ex.name) for ex in Exchange.objects.all()]
+
+
+
+

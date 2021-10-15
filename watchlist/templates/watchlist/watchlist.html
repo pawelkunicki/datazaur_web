@@ -22,6 +22,15 @@
         <div id="add_coin_div">
             {% include 'watchlist/_add_coin_form.html' %}
         </div>
+        <div id="new_watchlist_div">
+            <h3>
+                New watchlist
+            </h3>
+            <form id="new_watchlist_form" action="#" method="post">
+                {% csrf_token %}
+                {{ new_watchlist.as_p }}
+            </form>
+        </div>
     </div>
 
 </div>

@@ -6,7 +6,7 @@
     </h4>
     <select id="add_coin_dropdown" name="add_coin_dropdown">
         {% for coin in coins %}
-            <option id="{{ coin.id }}" name="{{ coin.coin_id }}" value="{{ coin.id }}"> {{ coin.name }} </option>
+            <option id="{{ coin.coin_id }}" name="{{ coin.coin_id }}" value="{{ coin.coin_id }}"> {{ coin.name }} ({{ coin.symbol }}) </option>
         {% endfor %}
     </select>
     <input type="hidden" name="selected_coin" id="selected_coin">

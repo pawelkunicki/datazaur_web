@@ -24,6 +24,9 @@
                 Market cap
             </th>
             <th>
+                Source
+            </th>
+            <th>
                 <form method="POST" id="del_from_watchlist_form">
                     {% csrf_token %}
                     <input type="hidden" name="checked_symbols" id="checked_symbols">
@@ -38,7 +41,7 @@
         {% for coin in watchlist_coins %}
         <tr>
             <td>
-                {{ coin.coin.symbol }}
+                {{ coin.coin.symbol.upper }}
             </td>
             <td>
                 {{ coin.coin.name }}
@@ -59,7 +62,18 @@
                 m cap
             </td>
             <td>
-                <input type="checkbox" id="{{ coin.coin.id }}">
+                <form id="source_{{ coin.id }}" method="post" action="#">
+                    {% csrf_token %}
+                    {{ set_source.as_p }}
+                    <input type="hidden" name="coin" value="{{ coin.id }}">
+                    <button type="submit" id="source_btn" name="source_btn" value="submit">
+                        Save
+                    </button>
+                </form>
+
+            </td>
+            <td>
+                <input type="checkbox" id="del_{{ coin.coin.id }}">
             </td>
         </tr>
         {% endfor %}
