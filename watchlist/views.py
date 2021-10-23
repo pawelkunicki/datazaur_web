@@ -97,16 +97,16 @@ def watchlist(request):
             exchange = Exchange.objects.get(id=form_data['source'])
             watch_coin = WatchlistCoins.objects.get(id=form_data['coin'])
             watch_coin.source = exchange
-            watch_coin.sve()
+            watch_coin.save()
             print(f'source changed to {form_data["source"]}')
         else:
             print(f'errors: {source_form.errors}')
 
     elif request.method == 'POST' and 'delete' in str(request.POST):
-        print('del')
-        print(request.POST)
-        ids_to_delete = [x.split('_')[1] for x in request.POST['checked_symbols']]
-        WatchlistCoins.objects.filter(watchlist=watchlist).filter()
+        ids_to_delete = [x.split('_')[1] for x in request.POST['checked_symbols'].split(',')]
+        for id in ids_to_delete:
+            watchlist.coins.remove(Cryptocurrency.objects.get(id=id))
+        return HttpResponseRedirect(reverse('watchlist:watchlist', args=()))
 
     else:
         context['add_form'] = AddToPortfolio()
