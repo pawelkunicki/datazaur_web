@@ -16,12 +16,11 @@ from website.models import UserProfile
 def watchlist(request):
     context = {}
     profile = UserProfile.objects.get(user=request.user)
-    print(profile)
     portfolio = Portfolio.objects.get(user=profile)
     watchlists = Watchlist.objects.filter(user=profile)
     watchlist = watchlists.first()
     coins = Cryptocurrency.objects.all()
-    watchlist_coins = WatchlistCoins.objects.filter(watchlist=watchlist)
+    watchlist_coins = watchlist.coins.all()
     coins_in_pf = Amounts.objects.filter(portfolio=portfolio)
     print(profile, portfolio, watchlists, watchlist_coins)
     context['new_watchlist'] = NewWatchlist()
@@ -38,6 +37,7 @@ def watchlist(request):
     if request.method == 'POST' and 'add_coin' in str(request.POST):
         print('addin')
         watchlist.coins.add(Cryptocurrency.objects.get(coin_id=request.POST['selected_coin']))
+        watchlist.save()
         return HttpResponseRedirect(reverse('watchlist:watchlist', args=()))
 
 
@@ -97,6 +97,7 @@ def watchlist(request):
             exchange = Exchange.objects.get(id=form_data['source'])
             watch_coin = WatchlistCoins.objects.get(id=form_data['coin'])
             watch_coin.source = exchange
+            watch_coin.sve()
             print(f'source changed to {form_data["source"]}')
         else:
             print(f'errors: {source_form.errors}')

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import WatchlistCoins, Watchlist, Portfolio, Amounts
+from .models import Watchlist, WatchlistCoins, Portfolio, Amounts
 # Register your models here.
 
 admin.site.register(Watchlist)

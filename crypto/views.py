@@ -75,21 +75,13 @@ def crypto(request):
         print(watchlist.user)
         print(request.POST)
 
-
         symbols = request.POST['checked_symbols'].split(',')
         coin_ids = [symbol.split('_')[1].lower() for symbol in symbols if '_' in symbol]
         print(coin_ids)
+        watchlist.coins.clear()
         for symbol in coin_ids:
-            if not Cryptocurrency.objects.filter(symbol=symbol).exists():
-                print(f'coin {symbol} doesnt exist')
-            else:
-                coin = Cryptocurrency.objects.filter(symbol=symbol).first()
-                print(coin)
-                if not WatchlistCoins.objects.filter(watchlist=watchlist).filter(coin=coin).exists():
-                    new_coin = WatchlistCoins.objects.create(watchlist=watchlist, coin=coin)
-                    new_coin.save()
-                    print(new_coin)
-                    print(new_coin.coin)
+            watchlist.coins.add(Cryptocurrency.objects.filter(symbol=symbol).first())
+
         context['watchlist_ids'] = coin_ids
 
     print(context)
