@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
-from .forms import AddToPortfolio, ChangeCurrency, NewWatchlist, SetSource
+from .forms import AddToPortfolio, ChangeCurrency, NewWatchlist, SetSource, AddCoin
 from .models import Watchlist, WatchlistCoins, Portfolio, Amounts
 from markets.models import Currency
 from crypto.models import Cryptocurrency, Exchange, ExchangeCoins
@@ -18,17 +18,16 @@ def watchlist(request):
     profile = UserProfile.objects.get(user=request.user)
     print(profile)
     portfolio = Portfolio.objects.get(user=profile)
-    watchlist = Watchlist.objects.get(user=profile)
+    watchlists = Watchlist.objects.filter(user=profile)
+    watchlist = watchlists.first()
     coins = Cryptocurrency.objects.all()
-    currencies = Currency.objects.all()
     watchlist_coins = WatchlistCoins.objects.filter(watchlist=watchlist)
     coins_in_pf = Amounts.objects.filter(portfolio=portfolio)
-    print(profile, portfolio, watchlist, watchlist_coins)
+    print(profile, portfolio, watchlists, watchlist_coins)
     context['new_watchlist'] = NewWatchlist()
     context['change_currency'] = ChangeCurrency()
     context['set_source'] = SetSource()
-
-
+    context['watchlists'] = watchlists
 
     if request.method == 'GET':
         print(watchlist_coins)
@@ -36,7 +35,14 @@ def watchlist(request):
 
 
 
-    if request.method == 'POST' and 'add' in str(request.POST):
+    if request.method == 'POST' and 'add_coin' in str(request.POST):
+        print('addin')
+        watchlist.coins.add(Cryptocurrency.objects.get(coin_id=request.POST['selected_coin']))
+        return HttpResponseRedirect(reverse('watchlist:watchlist', args=()))
+
+
+    elif request.method == 'POST' and 'add_to_portfolio' in str(request.POST):
+        print('addin')
         add_form = AddToPortfolio(request.POST)
         if add_form.is_valid():
             data = add_form.cleaned_data
@@ -94,6 +100,12 @@ def watchlist(request):
             print(f'source changed to {form_data["source"]}')
         else:
             print(f'errors: {source_form.errors}')
+
+    elif request.method == 'POST' and 'delete' in str(request.POST):
+        print('del')
+        print(request.POST)
+        ids_to_delete = [x.split('_')[1] for x in request.POST['checked_symbols']]
+        WatchlistCoins.objects.filter(watchlist=watchlist).filter()
 
     else:
         context['add_form'] = AddToPortfolio()

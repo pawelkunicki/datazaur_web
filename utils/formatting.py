@@ -24,22 +24,27 @@ def string_to_float(x):
         return float(x.replace('%', '').replace('+', ''))
 
 
-
 def color_cell(x):
     sign = str(x)[0]
-    if sign == '-':
-        color = 'red'
-        pref = ''
-    else:
-        color = 'green'
-        pref = '+'
-    if '%' in str(x):
-        return f"""<p class={color}>({pref}{x})</p>"""
-    else:
-        return f"""<p class={color}>{pref}{x}</p>"""
+    prefix, color = ('', 'red') if sign == '-' else ('+', 'green')
+    suffix = '%' if '%' not in str(x) else ''
+    return f"""<p class={color}>{prefix}{x}{suffix}</p>"""
+
+# def color_cell(x):
+#     sign = str(x)[0]
+#     if sign == '-':
+#         color = 'red'
+#         pref = ''
+#     else:
+#         color = 'green'
+#         pref = '+'
+#     if '%' in str(x):
+#         return f"""<p class={color}>({pref}{x})</p>"""
+#     else:
+#         return f"""<p class={color}>{pref}{x}</p>"""
 
 
-def prepare_df_display(df, n_decimals=3):
+def prepare_df_display(df, n_decimals=2):
     for col in df.columns:
         if 'Price' in col or 'Δ' in col or 'vol' in col or 'cap' in col or 'Supply' in col:
             df[col] = df[col].apply(lambda x: format(float(x.replace(',', '')).__round__(n_decimals), ',') if type(x) == str else

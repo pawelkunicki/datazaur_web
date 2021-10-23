@@ -13,7 +13,7 @@ bearer_token = os.environ.get("BEARER_TOKEN")
 search_url = "https://api.twitter.com/2/tweets/counts/recent"
 
 # Optional params: start_time,end_time,since_id,until_id,next_token,granularity
-query_params = {'query': '#ETH', 'granularity': 'hour'}
+query_params = {'query': '#ETH', 'granularity': 'minute'}
 
 
 def bearer_oauth(r):

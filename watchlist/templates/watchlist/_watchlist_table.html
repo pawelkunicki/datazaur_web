@@ -27,10 +27,10 @@
                 Source
             </th>
             <th>
-                <form method="POST" id="del_from_watchlist_form">
+                <form method="POST" id="del_from_watchlist_form" action="#">
                     {% csrf_token %}
                     <input type="hidden" name="checked_symbols" id="checked_symbols">
-                    <button type="submit" id="delete_from_watchlist" onclick="findChecked()">
+                    <button type="submit" name="delete_from_watchlist" id="delete_from_watchlist" onclick="findChecked()">
                         Delete
                     </button>
                 </form>
@@ -73,7 +73,7 @@
 
             </td>
             <td>
-                <input type="checkbox" id="del_{{ coin.coin.id }}">
+                <input type="checkbox" class="star" id="del_{{ coin.coin.id }}">
             </td>
         </tr>
         {% endfor %}

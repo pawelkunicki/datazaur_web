@@ -172,7 +172,7 @@ def twitter(request):
                            'total_count': sum(table['tweet_count'])}
 
         intervals = {'hour': '1h', 'minute': '1m', 'day': '1d'}
-        interval = intervals[granularity]
+        interval = intervals[granularity.lower()]
         exchange = settings.DEFAULT_EXCHANGE
         currency = settings.DEFAULT_CURRENCY
         ticker = symbol.replace('#', '').upper() + '/' + currency + 'T'

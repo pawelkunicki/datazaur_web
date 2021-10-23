@@ -10,8 +10,13 @@
 
     <div id="watchlist_table_div">
         <h3>
-            Your watchlist
+            Your watchlists
         </h3>
+        <select id="watchlists_select">
+            {% for watchlist in watchlists %}
+                <option id="{{ watchlist.id }}" name="{{ watchlist.name }}" value="{{ watchlist.name }}"> {{ watchlist.name }} </option>
+            {% endfor %}
+        </select>
         {% include 'watchlist/_watchlist_table.html' %}
     </div>
 

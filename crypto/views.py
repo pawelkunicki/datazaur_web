@@ -6,7 +6,7 @@ from utils.compare_timestamps import compare_timestamps
 from utils.charts import Chart
 from utils.random_color import get_random_color
 from utils.crypto_data import exchanges_by_vol, top_coins_by_mcap
-from utils.market_data import *
+
 from utils.other_data import *
 from utils.formatting import *
 from watchlist.models import Watchlist, WatchlistCoins, Portfolio, Amounts

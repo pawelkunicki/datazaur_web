@@ -75,8 +75,7 @@ def log_in(request):
 
 
 def signup(request):
-    context = {'form': UserCreationForm}
-    context['currencies'] = Currency.objects.all()
+    context = {'form': UserCreationForm, 'currencies': Currency.objects.all()}
     currency = Currency.objects.get(symbol=settings.DEFAULT_CURRENCY)
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)

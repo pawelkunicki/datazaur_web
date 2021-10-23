@@ -28,12 +28,12 @@ class Watchlist(models.Model):
                                  on_delete=models.CASCADE)
     default_source = models.ForeignKey('crypto.Exchange', on_delete=models.CASCADE)
     coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_coins',
-                                   through='watchlistcoins', through_fields=('watchlist_id', 'coin_id'))
+                                   through='watchlistcoins', through_fields=('watchlist', 'coin'))
 
 
 
 class WatchlistCoins(models.Model):
     watchlist = models.ForeignKey('watchlist.Watchlist', on_delete=models.CASCADE, related_name='watchlistcoins_watchlist')
     coin = models.ForeignKey('crypto.Cryptocurrency', on_delete=models.CASCADE, related_name='watchlistcoins_coin')
-    source = models.ForeignKey('crypto.Exchange', blank=True, on_delete=models.CASCADE, related_name='watchlistcoins_source')
+    source = models.ForeignKey('crypto.Exchange', null=True, blank=True, on_delete=models.CASCADE, related_name='watchlistcoins_source')
 
