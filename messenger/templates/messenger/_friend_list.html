@@ -5,15 +5,14 @@
 </h3>
 <table id="friend_list">
     <thead>
-        <th>
-            Name
-        </th>
-        <th>
-            Online
-        </th>
-        <th>
-            Msg
-        </th>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Online
+            </th>
+        </tr>
     </thead>
     <tbody>
         {% if friends %}
@@ -21,18 +20,11 @@
                 <tr>
                     <td>
                         <h5>
-                            {{ friend.friend.user }}
+                            <a href="/messenger/{{ friend.id }}">{{ friend }}</a>
                         </h5>
                     </td>
                     <td>
                         <img src="{% static 'img/green-dot.png' %}" alt="x" width="18px" height="18px">
-                    </td>
-                    <td>
-                        <form method="get" action="#">
-                            <button type="submit" class="friend_list_button" name="new_msg" value="{{ friend.friend.id }}">
-                                Message
-                            </button>
-                        </form>
                     </td>
                 </tr>
             {% endfor %}

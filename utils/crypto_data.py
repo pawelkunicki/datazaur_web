@@ -13,6 +13,9 @@ api_key = os.environ.get('CRYPTOCOMPARE_KEY')
 base_cryptocompare_url = settings.BASE_CRYPTOCOMPARE_URL
 
 
+def watchlist_prices(watchlist):
+    pass
+
 def get_coins_info():
     url = f'https://min-api.cryptocompare.com/data/all/coinlist?api_key={api_key}'
     data = pd.DataFrame(requests.get(url).json()['Data']).transpose()[['Id', 'Name', 'Symbol', 'CoinName',

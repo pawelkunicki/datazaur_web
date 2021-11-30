@@ -16,12 +16,10 @@ def get_currency_value(base, quote, amount):
 
 
 def gecko_quote(base, quote):
-    result = {}
     gecko = pycoingecko.CoinGeckoAPI()
     coin = Cryptocurrency.objects.filter(symbol=base).first().coin_id
     data = gecko.get_coin_by_id(coin)['market_data']
-    result['coin'] = coin
-    result['price'] = data['current_price'][quote]
+    price = data['current_price'][quote]
     mcap = data['market_cap']
     daily_chg = data['price_change_percentage_24h']
     weekly_chg = data['price_change_percentage_7d']

@@ -19,9 +19,5 @@ class UserProfile(models.Model):
     #online = models.BooleanField(default=False)
     #last_login = models.IntegerField(default=0)
     def __str__(self):
-        return self.user.username + 'profile'
-
-class FriendLists(models.Model):
-    user = models.ForeignKey('website.UserProfile', related_name='friendlists_user', on_delete=models.CASCADE, null=False)
-    friend = models.ForeignKey('website.UserProfile', related_name='friendlists_friend', on_delete=models.CASCADE, null=False)
+        return self.user.username
 

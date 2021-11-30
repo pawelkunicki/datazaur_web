@@ -4,3 +4,4 @@ from .models import Cryptocurrency, Exchange
 
 admin.site.register(Cryptocurrency)
 admin.site.register(Exchange)
+

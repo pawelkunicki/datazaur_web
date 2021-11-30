@@ -1,14 +1,12 @@
 import requests
-import os
 from utils.compare_timestamps import *
 from utils.decorators import load_or_save
 import investpy
-import pandas as pd
 import datetime
-from static.data.default_countries import DEFAULT_COUNTRIES
-from static.data.default_indices import GENERAL_INDICES
-
+from data.default_countries import DEFAULT_COUNTRIES
+from data.default_indices import GENERAL_INDICES
 from .formatting import *
+
 
 CRYPTOCOMPARE_KEY = os.environ.get('CRYPTOCOMPARE_KEY')
 REFRESH_RATE = 600

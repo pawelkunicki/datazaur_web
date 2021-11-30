@@ -4,16 +4,17 @@ import pandas as pd
 CURRENCY = settings.DEFAULT_CURRENCY
 URL = settings.BASE_CRYPTOCOMPARE_URL
 
+
 def round_number(x, n):
     x2 = float(x.replace('%', '').replace('+', '')) if type(x) == str else x
     return x2.__round__(n)
-
 
 
 def add_hyperlinks(df):
     for col in ['Symbol', 'Name']:
         df[col] = df.apply(lambda x: f"""<a href={URL + x['Url']}>{x[col]}</a>""", axis=1)
     return df
+
 
 def add_yields_hyperlinks(x):
     return f"""<a href='/yield_curves?country={x}'> {x.title()} </a>"""

@@ -17,6 +17,6 @@ class Message(models.Model):
     timestamp = models.IntegerField(default=0)
 
     def __str__(self):
-        return str(datetime.datetime.fromtimestamp(self.timestamp)) + '     ' + self.content
+        return str(datetime.datetime.fromtimestamp(self.timestamp)) + ' ' + self.sender.username + ': ' + self.content
 
 

@@ -8,7 +8,7 @@ class Chat {
 
 $(document).ready(function(){
     var user_id = "{{ profile.user.id }}";
-    var recipient_id = "{{ }}";
+    var recipient_id = "{{ 1 }}";
 //    var chat = Chat(user=)
     console.log('loaded');
 

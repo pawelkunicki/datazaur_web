@@ -1,5 +1,6 @@
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
+from django.urls import reverse
 from utils.crypto_data import *
 from .models import Cryptocurrency
 from utils.compare_timestamps import compare_timestamps
@@ -9,7 +10,7 @@ from utils.crypto_data import exchanges_by_vol, top_coins_by_mcap
 
 from utils.other_data import *
 from utils.formatting import *
-from watchlist.models import Watchlist, WatchlistCoins, Portfolio, Amounts
+from watchlist.models import Watchlist, Portfolio, Amounts
 from watchlist.forms import AddCoin
 from markets.models import Currency
 
@@ -47,45 +48,41 @@ def crypto(request):
         else:
             context['currency'] = settings.DEFAULT_CURRENCY
 
+    if request.method == 'GET':
+        return render(request, 'crypto/crypto.html', context)
 
+    elif request.method == 'POST':
+        if not request.user.is_authenticated:
+            return render(request, 'website/login_required.html', context)
 
+        elif request.is_ajax and 'checked_symbols' in str(request.POST):
+            print('ajax2')
+            print(request.POST)
+            symbols = request.POST['checked_symbols'].split(',')
+            coin_ids = [symbol.split('_')[1].lower() for symbol in symbols if '_' in symbol]
+            print(coin_ids)
+            watchlist.coins.clear()
+            for symbol in coin_ids:
+                watchlist.coins.add(Cryptocurrency.objects.filter(symbol=symbol).first())
+            context['watchlist_ids'] = coin_ids
 
-    if request.method == 'POST' and not request.user.is_authenticated:
-        return render(request, 'website/login_required.html', context)
-
-    if request.method == 'POST' and 'amount' in str(request.POST):
-        print('add to portfolio')
-        print(request.POST)
-        coin_id = request.POST['coin']
-        new_amount = request.POST['amount']
-        portfolio = Portfolio.objects.get(user=profile)
-        if Amounts.objects.filter(portfolio=portfolio).filter(coin=coin_id).exists():
-            amount = Amounts.objects.filter(portfolio=portfolio).filter(coin=coin_id)
-            amount.amount += new_amount
+        elif 'amount' in str(request.POST):
+            print('add to portfolio')
+            print(request.POST)
+            coin_id = request.POST['coin']
+            new_amount = request.POST['amount']
+            portfolio = Portfolio.objects.get(user=profile)
+            if Amounts.objects.filter(portfolio=portfolio).filter(coin=coin_id).exists():
+                amount = Amounts.objects.filter(portfolio=portfolio).filter(coin=coin_id)
+                amount.amount += new_amount
+                print(f'added {amount} to {coin_id}')
+            else:
+                amount = Amounts.objects.create(portfolio=portfolio, coin=coin_id, amount=new_amount)
+                print(f'created {amount} of {coin_id}')
             amount.save()
-            print(f'added {amount} to {coin_id}')
-        else:
-            amount = Amounts.objects.create(portfolio=portfolio, coin=coin_id, amount=new_amount)
-            amount.save()
-            print(f'created {amount} of {coin_id}')
 
-    if request.method == 'POST' and request.is_ajax and 'checked_symbols' in str(request.POST):
-        print('ajax2')
-        print(watchlist)
-        print(watchlist.user)
-        print(request.POST)
+        return HttpResponseRedirect(reverse('crypto:crypto', args=()))
 
-        symbols = request.POST['checked_symbols'].split(',')
-        coin_ids = [symbol.split('_')[1].lower() for symbol in symbols if '_' in symbol]
-        print(coin_ids)
-        watchlist.coins.clear()
-        for symbol in coin_ids:
-            watchlist.coins.add(Cryptocurrency.objects.filter(symbol=symbol).first())
-
-        context['watchlist_ids'] = coin_ids
-
-    print(context)
-    return render(request, 'crypto/crypto.html', context)
 
 
 

@@ -18,7 +18,6 @@ class Cryptocurrency(models.Model):
     used_in_nft = models.BooleanField(blank=True, null=True)
     block_reward = models.FloatField(blank=True, null=True)
 
-    watchlist = models.ManyToManyField('watchlist.Watchlist', related_name='cryptocurrency_watchlist', blank=True)
 
 
 class Exchange(models.Model):

@@ -9,14 +9,14 @@ class Portfolio(models.Model):
     currency = models.ForeignKey('markets.Currency', on_delete=models.CASCADE, related_name='portfolio_currency',
                                  blank=True, null=True)
     coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='portfolio_cryptocurrency',
-                                   through='amounts', through_fields=('portfolio_id', 'coin_id'))
+                                   through='amounts', through_fields=('portfolio', 'coin'))
 
 
 
 class Amounts(models.Model):
     portfolio = models.ForeignKey('watchlist.Portfolio', on_delete=models.CASCADE, related_name='amounts_portfolio')
     coin = models.ForeignKey('crypto.Cryptocurrency', on_delete=models.CASCADE, related_name='amounts_coin')
-    amount = models.FloatField()
+    amount = models.FloatField(default=0)
 
 
 
@@ -26,14 +26,10 @@ class Watchlist(models.Model):
     name = models.CharField(max_length=32, default='watchlist')
     currency = models.ForeignKey('markets.Currency', blank=True, null=True, related_name='watchlist_currency',
                                  on_delete=models.CASCADE)
-    default_source = models.ForeignKey('crypto.Exchange', on_delete=models.CASCADE)
-    coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_coins',
-                                   through='watchlistcoins', through_fields=('watchlist', 'coin'))
+    default_source = models.ForeignKey('crypto.Exchange', on_delete=models.CASCADE, null=True, blank=True)
+    coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_coins')
 
 
 
-class WatchlistCoins(models.Model):
-    watchlist = models.ForeignKey('watchlist.Watchlist', on_delete=models.CASCADE, related_name='watchlistcoins_watchlist')
-    coin = models.ForeignKey('crypto.Cryptocurrency', on_delete=models.CASCADE, related_name='watchlistcoins_coin')
-    source = models.ForeignKey('crypto.Exchange', null=True, blank=True, on_delete=models.CASCADE, related_name='watchlistcoins_source')
+
 

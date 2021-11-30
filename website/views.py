@@ -76,14 +76,14 @@ def log_in(request):
 
 def signup(request):
     context = {'form': UserCreationForm, 'currencies': Currency.objects.all()}
-    currency = Currency.objects.get(symbol=settings.DEFAULT_CURRENCY)
+    #currency = Currency.objects.get(symbol=settings.DEFAULT_CURRENCY)
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST)
         if user_form.is_valid():
             user_data = user_form.cleaned_data
             user = User.objects.create_user(username=user_data['username'], password=user_data['password1'])
             user.save()
-            profile = UserProfile.objects.create(user=user, currency=currency)
+            profile = UserProfile.objects.create(user=user)
             profile.save()
             request.session.set_expiry(86400)
             login(request, user)

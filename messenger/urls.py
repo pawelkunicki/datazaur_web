@@ -6,9 +6,8 @@ from . import views
 
 app_name = 'messenger'
 urlpatterns = [
-    path('messenger', views.messenger, name='messenger'),
-    path('top_traders', views.top_traders, name='top_traders'),
-    path('top_strategies', views.top_strategies, name='top_strategies'),
+    path('', views.messenger, name='messenger'),
+    path('<int:user_id>', views.chat, name='chat'),
     ]
 
 

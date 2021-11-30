@@ -1,9 +1,8 @@
 from django import forms
-from static.data.constants import ORDER_TYPES, MARKET_TYPES
+from data.constants import ORDER_TYPES, MARKET_TYPES
 from crypto.models import Cryptocurrency
 from markets.models import Currency
 import ccxt
-from crypto.models import Exchange, ExchangeCoins
 
 
 class TradeForm(forms.Form):
