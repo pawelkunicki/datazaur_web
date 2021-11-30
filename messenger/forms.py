@@ -15,3 +15,4 @@ class FindUsers(forms.Form):
 
 class AddFriend(forms.Form):
     user = forms.HiddenInput()
+
