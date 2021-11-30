@@ -39,18 +39,18 @@ def messenger(request):
                 print(context['search_results'])
             else:
                 print(f'error {find_form.errors}')
+    else:
 
-        elif 'add_friend' in str(request.POST):
-            print('useradd')
-            print(request.POST)
-            friend = UserProfile.objects.get(user=User.objects.get(id=request.POST['add_friend']))
-            if profile.friends.filter(user=friend.user).exists():
-                print('friends already')
-            else:
-                profile.friends.add(friend)
-                print('saved friends')
+        print('useradd')
+        print(request.POST)
+        friend = UserProfile.objects.get(user=User.objects.get(id=request.POST['add_friend']))
+        if profile.friends.filter(user=friend.user).exists():
+            print('friends already')
+        else:
+            profile.friends.add(friend)
+            print('saved friends')
 
-            return render(request, 'messenger/messenger.html', context)
+        return render(request, 'messenger/messenger.html', context)
 
     return render(request, 'messenger/messenger.html', context)
 
@@ -72,7 +72,7 @@ def chat(request, user_id):
     context['send_message'] = SendMessage()
     context['search_results'] = []
 
-    context['messages'] = Message.objects.filter(sender=request.user, recipient=recipient.user)
+    context['messages'] = Message.objects.filter(sender=profile, recipient=recipient)
 
 
     if request.method == 'POST':
@@ -85,10 +85,11 @@ def chat(request, user_id):
         #recipient = UserProfile.objects.get(id=request.POST['recipient_id'])
         recipient = UserProfile.objects.get(id=user_id)
 
-        msg = Message.objects.create(sender=sender.user, recipient=recipient.user, content=message, timestamp=datetime.datetime.now().timestamp())
+        msg = Message.objects.create(sender=sender, recipient=recipient, content=message, timestamp=datetime.datetime.now().timestamp())
         msg.save()
         context['recipient'] = recipient
         context['messages'] = Message.objects.filter(sender=profile, recipient=recipient)
+
 
 
 
