@@ -60,7 +60,7 @@ def messenger(request):
 def chat(request, user_id):
 
     context = {}
-    profile = UserProfile.objects.get(user=request.user)
+    user = UserProfile.objects.get(user=request.user)
     friends = profile.friends.all()
     recipient = UserProfile.objects.get(id=user_id)
 
@@ -72,31 +72,18 @@ def chat(request, user_id):
     context['send_message'] = SendMessage()
     context['search_results'] = []
 
-    context['messages'] = Message.objects.filter(sender=profile, recipient=recipient)
-
+    context['messages'] = Message.objects.filter(sender=user, recipient=recipient)
+    context['messages2'] = Message.objects.filter(sender=recipient, recipient=user)
 
     if request.method == 'POST':
-
         print('msg')
         print(request.user)
         print(request.POST)
         message = request.POST['message_text']
-        sender = UserProfile.objects.get(user=request.user)
-        #recipient = UserProfile.objects.get(id=request.POST['recipient_id'])
-        recipient = UserProfile.objects.get(id=user_id)
-
         msg = Message.objects.create(sender=sender, recipient=recipient, content=message, timestamp=datetime.datetime.now().timestamp())
         msg.save()
-        context['recipient'] = recipient
-        context['messages'] = Message.objects.filter(sender=profile, recipient=recipient)
-
-
-
 
     return render(request, 'messenger/chat.html', context)
-
-
-
 
 
 class MessengerView(TemplateView):
