@@ -6,9 +6,10 @@ setInterval(function(){
         url: '/messenger/getMessages/' + friend_id,
         success: function(response){
             $('#chat_textarea').empty();
-            console.log(response);
+
             for (var key in response.messages){
-                var temp = "<div class='container darker'>" + response.messages[key] + "</div>"
+                var temp = response.messages[key];
+                console.log(temp);
                 $('#chat_textarea').append(temp);
             }
         },

@@ -66,6 +66,9 @@ def get_messages(request, friend_id):
         chain(sent_msgs, received_msgs),
         key=lambda instance: instance['timestamp'])
 
+    for msg in msgs:
+        msg['sender_id'] = UserProfile.objects.get(id=msg['sender_id']).user.username
+
     print(msgs)
     print(type(msgs))
     return JsonResponse({'messages': msgs})
