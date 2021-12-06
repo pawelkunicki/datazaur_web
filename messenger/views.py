@@ -73,6 +73,7 @@ def get_messages(request, friend_id):
     print(type(msgs))
     return JsonResponse({'messages': msgs})
 
+
 @login_required
 def chat(request, friend_id):
 
