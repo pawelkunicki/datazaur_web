@@ -1,14 +1,14 @@
 import datetime
 from itertools import chain
 
-from django.shortcuts import render, HttpResponseRedirect, redirect
+from django.shortcuts import render, HttpResponseRedirect, redirect, HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic import TemplateView
 from .models import Message
-from .forms import SendMessage, FindUsers
+from .forms import FindUsers
 from website.models import UserProfile
 # Create your views here.
 
@@ -24,7 +24,6 @@ def messenger(request):
     context['friends'] = friends
     context['recipient'] = None
     context['find_users'] = FindUsers()
-    context['send_message'] = SendMessage()
     context['search_results'] = []
 
     if request.method == 'GET':
@@ -46,15 +45,34 @@ def messenger(request):
         print('useradd')
         print(request.POST)
         friend = UserProfile.objects.get(user=User.objects.get(id=request.POST['add_friend']))
-        if profile.friends.filter(user=friend.user).exists():
-            print('friends already')
-        else:
+        if not profile.friends.filter(user=friend.user).exists():
             profile.friends.add(friend)
-            print('saved friends')
-
-        return render(request, 'messenger/messenger.html', context)
 
     return render(request, 'messenger/messenger.html', context)
+
+
+
+
+
+@login_required
+def chat(request, friend_id):
+    context = {}
+    user = UserProfile.objects.get(user=request.user)
+    friends = user.friends.all()
+    recipient = UserProfile.objects.get(id=friend_id)
+    context['profile'] = user
+    context['friends'] = friends
+    context['recipient'] = recipient
+    context['find_users'] = FindUsers()
+    context['search_results'] = []
+    sent_msgs = Message.objects.filter(sender=user, recipient=recipient)
+    received_msgs = Message.objects.filter(sender=recipient, recipient=user)
+    msgs = sorted(
+        chain(sent_msgs, received_msgs),
+        key=lambda instance: instance.timestamp)
+    context['messages'] = msgs
+    return render(request, 'messenger/chat.html', context)
+
 
 
 def get_messages(request, friend_id):
@@ -69,45 +87,19 @@ def get_messages(request, friend_id):
     for msg in msgs:
         msg['sender_id'] = UserProfile.objects.get(id=msg['sender_id']).user.username
 
-    print(msgs)
-    print(type(msgs))
     return JsonResponse({'messages': msgs})
 
 
-@login_required
-def chat(request, friend_id):
+def send(request):
+    print('send')
+    print(request.user)
+    print(request.POST)
+    sender = UserProfile.objects.get(user=request.user)
+    recipient = UserProfile.objects.get(id=request.POST['recipient_id'])
+    message = request.POST['msg_text']
+    msg = Message.objects.create(sender=sender, recipient=recipient, content=message, timestamp=datetime.datetime.now())
 
-    context = {}
-    user = UserProfile.objects.get(user=request.user)
-    friends = user.friends.all()
-    recipient = UserProfile.objects.get(id=friend_id)
-
-    print(friends)
-    context['profile'] = user
-    context['friends'] = friends
-    context['recipient'] = recipient
-    context['find_users'] = FindUsers()
-    context['send_message'] = SendMessage()
-    context['search_results'] = []
-
-    sent_msgs = Message.objects.filter(sender=user, recipient=recipient)
-    received_msgs = Message.objects.filter(sender=recipient, recipient=user)
-    msgs = sorted(
-        chain(sent_msgs, received_msgs),
-        key=lambda instance: instance.timestamp)
-
-    context['messages'] = msgs
-
-
-    if request.method == 'POST':
-        print('msg')
-        print(request.user)
-        print(request.POST)
-        message = request.POST['message_text']
-        msg = Message.objects.create(sender=user, recipient=recipient, content=message, timestamp=datetime.datetime.now().timestamp())
-        return HttpResponseRedirect(reverse('messenger:chat', args=(friend_id,)))
-
-    return render(request, 'messenger/chat.html', context)
+    return HttpResponse('sent')
 
 
 

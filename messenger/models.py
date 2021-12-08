@@ -14,9 +14,9 @@ class Message(models.Model):
     recipient = models.ForeignKey('website.UserProfile', related_name='message_recipient', on_delete=models.CASCADE,
                                   unique=False)
     content = models.TextField(max_length=1000, blank=False)
-    timestamp = models.IntegerField(default=0)
+    timestamp = models.DateTimeField()
 
     def __str__(self):
-        return str(datetime.datetime.fromtimestamp(self.timestamp)) + ' ' + self.sender.user.username + ': ' + self.content
+        return str(self.timestamp) + ' ' + self.sender.user.username + ': ' + str(self.content)
 
 
