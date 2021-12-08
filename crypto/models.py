@@ -7,7 +7,7 @@ class Cryptocurrency(models.Model):
     coin_id = models.CharField(max_length=32, blank=False)
     symbol = models.CharField(max_length=8, blank=False)
     name = models.CharField(max_length=32, blank=False)
-    price = models.FloatField()
+    price = models.FloatField(blank=True, null=True)
     description = models.TextField(max_length=256)
     url = models.CharField(max_length=32, blank=True, null=True)
     algorithm = models.CharField(max_length=32)

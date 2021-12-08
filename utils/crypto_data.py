@@ -4,7 +4,8 @@ import requests
 import os
 import json
 from django.conf import settings
-from utils.decorators import prep_crypto_display, load_or_save
+from crypto.models import Cryptocurrency
+from .decorators import prep_crypto_display, load_or_save
 from .formatting import prepare_df_display
 
 coins_file = settings.CRYPTO_FILE
@@ -28,7 +29,14 @@ def get_coins_info():
 
 def update_coin_prices():
     url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={currency}&api_key={api_key}'
-    cols = f'CoinInfo.Name CoinInfo.FullName CoinInfo.Url RAW.{currency}.PRICE '
+    cols = f'CoinInfo.Name CoinInfo.FullName RAW.{currency}.PRICE'.split()
+    df = pd.json_normalize(requests.get(url).json()['Data']).loc[:, cols]
+    df.columns = ['Symbol', 'Name', 'Price']
+    for i, r in df.iterrows():
+        coin = Cryptocurrency.objects.get(symbol=r['Symbol'])
+        coin.price = r['Price']
+        coin.save()
+
 
 
 @load_or_save('crypto.csv', 1200)
