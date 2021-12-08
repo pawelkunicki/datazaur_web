@@ -4,47 +4,10 @@ from utils.market_data import *
 from website.models import UserProfile
 
 
-# Create your views here.
-
-
-
 def markets(request):
-    context = {}
-
-
-    #rates_df = get_fx_rates(settings.DEFAULT_CURRENCY)
-
-    #coins_df = coins_by_mcap().iloc[:20, [1, 2, 4]]
-
-    # indices_df = get_indices_table()
-    # indices_df['24h Δ'] = indices_df['24h Δ'].apply(color_cell)
-    #
-    # bonds_df = get_bonds_table('10Y')
-    # bonds_df['24h Δ'] = bonds_df['24h Δ'].apply(color_cell)
-    #
-    # commodities_df = get_commodities()
-
     context = all_markets_data(600)
-
-    print(context)
     context['currencies'] = settings.SORTED_CURRENCIES
-
-
-    # context['indices'] = indices_df.to_html(escape=False)
-    # context['forex'] = rates_df.to_html(escape=False)
-    # context['coins'] = coins_df.to_html(escape=False)
-    # context['yields'] = bonds_df.to_html(escape=False)
-    # context['commodities'] = commodities_df.to_html(escape=False)
-
-
-    # price_headers = ('Instrument', 'Price', '24h Δ')
-    # context['headers'] = {'indices': price_headers, 'currencies': price_headers, 'coins': price_headers,
-    #                       'commodities': ('Name', 'Price', '24h Δ'), 'stocks': price_headers, 'funds': price_headers,
-    #                       'etfs': price_headers, 'bonds': ('Bond', 'Yield', '24h Δ')}
-
-
     return render(request, 'markets/markets.html', context)
-
 
 
 def forex(request):

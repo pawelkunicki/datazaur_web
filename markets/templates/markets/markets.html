@@ -4,11 +4,7 @@
     {% include 'markets/_markets_navbar.html' %}
 {% endblock %}
 
-{% block searchbar %}
-    <h2>
-        Yp
-    </h2>
-{% endblock %}
+
 
 {% block content %}
 <div id="all_markets">
@@ -47,7 +43,7 @@
     </div>
     <div id="bonds_col" class="market_col">
         <h2>
-            Yields
+            Bonds
         </h2>
         {{ yields |safe }}
     </div>
@@ -73,3 +69,6 @@
 {% block js %}
     <script src="{% static 'js/hideIndexCol.js' %}" type="text/javascript"></script>
 {% endblock %}
+
+
+

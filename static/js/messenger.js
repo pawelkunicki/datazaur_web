@@ -18,7 +18,7 @@ function getMessages(){
             for (var key in response.messages){
                 var temp = response.messages[key];
                 console.log(temp);
-                let msg = temp.timestamp + ' ' + temp.sender_id + ': ' + temp.content + '\n';
+                let msg = temp.timestamp.replace('T', ' ').slice(0, 16) + ' ' + temp.sender_id + ': ' + temp.content + '\n';
                 console.log(msg);
                 chatarea.value += msg;
                 setScroll();

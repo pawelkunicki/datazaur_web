@@ -2,6 +2,7 @@ import ccxt
 import pandas as pd
 import re
 
+
 def watchlist_prices(watchlist):
     quote_curr = watchlist.currency.symbol
 

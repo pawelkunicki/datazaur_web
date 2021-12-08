@@ -28,21 +28,7 @@ def string_to_float(x):
 def color_cell(x):
     sign = str(x)[0]
     prefix, color = ('', 'red') if sign == '-' else ('+', 'green')
-    suffix = '%' if '%' not in str(x) else ''
-    return f"""<p class={color}>{prefix}{x}{suffix}</p>"""
-
-# def color_cell(x):
-#     sign = str(x)[0]
-#     if sign == '-':
-#         color = 'red'
-#         pref = ''
-#     else:
-#         color = 'green'
-#         pref = '+'
-#     if '%' in str(x):
-#         return f"""<p class={color}>({pref}{x})</p>"""
-#     else:
-#         return f"""<p class={color}>{pref}{x}</p>"""
+    return f"""<p class={color}>{prefix}{x}</p>"""
 
 
 def prepare_df_display(df, n_decimals=2):
@@ -60,8 +46,6 @@ def prepare_df_display(df, n_decimals=2):
     if 'Updated' in df.columns:
         df['Updated'] = df['Updated'].apply(lambda x: pd.to_datetime(x * 10 ** 9))
     return df
-
-
 
 
 def prepare_df_save(df):

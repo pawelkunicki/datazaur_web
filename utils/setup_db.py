@@ -6,7 +6,8 @@ from crypto.models import Cryptocurrency, Exchange
 from .crypto_data import *
 from django.conf import settings
 
-FX_FILE = 'static/data/iso-4217-currency-codes.csv'
+FX_FILE = '/data/iso-4217-currency-codes.csv'
+
 
 def setup_fx_db():
     currency = settings.DEFAULT_CURRENCY
@@ -15,11 +16,7 @@ def setup_fx_db():
     codes.drop_duplicates(subset=['Alphabetic_Code'], inplace=True, keep='first')
     codes.set_index('Alphabetic_Code', inplace=True)
     for curr in currencies:
-        currency = Currency.objects.create(symbol=curr, name=codes.loc[curr, 'Currency'], country=codes.loc[curr, 'Entity'])
-        currency.save()
-
-
-
+        Currency.objects.create(symbol=curr, name=codes.loc[curr, 'Currency'], country=codes.loc[curr, 'Entity'])
 
 
 def setup_crypto_db():
@@ -30,13 +27,12 @@ def setup_crypto_db():
     print(coins)
     for k, v in coins.iterrows():
         print(v)
-        new_coin = Cryptocurrency.objects.create(symbol=v['Symbol'], name=v['CoinName'], description=v['Description'],
-                                                 url=v['AssetWebsiteUrl'],  algorithm=v['Algorithm'],
+        Cryptocurrency.objects.create(symbol=v['Symbol'], name=v['CoinName'], description=v['Description'],
+                                                 url=v['AssetWebsiteUrl'],  algorithm=v['Algorithm'], price=0,
                                                  proof_type=v['ProofType'], total_coins_mined=v['TotalCoinsMined'],
                                                  circulating_supply=v['CirculatingSupply'], max_supply=v['MaxSupply'],
                                                  used_in_defi=v['IsUsedInDefi'], used_in_nft=v['IsUsedInNft'],
                                                  block_reward=v['BlockReward'])
-        new_coin.save()
     print('finito setup crypto')
 
 
@@ -48,11 +44,8 @@ def setup_exchanges_db():
         exchanges = exchanges_by_vol()
         exchanges.to_csv(exchanges_file)
     for i, row in exchanges.iterrows():
-        new_exchange = Exchange.objects.create(name=i, url=row['Url'], country=row['Country'],
+        Exchange.objects.create(name=i, url=row['Url'], country=row['Country'],
                                                grade=row['Grade'])
-        new_exchange.save()
-
-
 
 
 # checks if database has as many objects as specified in settings (currencies are settings.SORTED_CURRENCIES,
@@ -73,15 +66,11 @@ def setup_db():
     print('done')
 
 
-
 def check_watchlists_and_portfolios():
     users = User.objects.all()
     for user in users:
         if not Watchlist.objects.filter(user=user).exists():
-            new_watchlist = Watchlist.objects.create(user=user)
-            new_watchlist.save()
-
-
+            Watchlist.objects.create(user=user)
 
 
 def all_db_checks():

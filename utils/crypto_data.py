@@ -26,6 +26,10 @@ def get_coins_info():
                                                                        'IsUsedInDefi', 'IsUsedInNft']]
     return data
 
+def update_coin_prices():
+    url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={currency}&api_key={api_key}'
+    cols = f'CoinInfo.Name CoinInfo.FullName CoinInfo.Url RAW.{currency}.PRICE '
+
 
 @load_or_save('crypto.csv', 1200)
 def top_coins_by_mcap():

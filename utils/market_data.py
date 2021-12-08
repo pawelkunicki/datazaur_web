@@ -20,29 +20,15 @@ def all_markets_data(refresh_rate=REFRESH_RATE):
     data = {}
     coins_data = prep_market_df(coins_by_mcap())
     data['crypto'] = coins_data.to_html(escape=False, justify='center')
-    print(f'1{data["crypto"]}')
 
     forex = get_fx_rates(CURRENCY)
-    # forex['change'] = forex['change'].astype(str) + '<br> (' + forex['change_percentage'].astype(str) + ')'
-    # forex['change'] = forex['change'].apply(color_cell)
-    # forex.columns = ['Symbol', 'Rate', '24h Δ', 'x']
-    # data['forex'] = forex.iloc[:, :3].to_html(escape=False, justify='center')
     data['forex'] = prep_market_df(forex).to_html(escape=False, justify='center')
-
-    print(f'2{data["forex"]}')
 
     indices = get_indices_table()
     data['indices'] = prep_market_df(indices).to_html(escape=False, justify='center')
 
-    print(f'3{data["indices"]}')
-
-
     yields = get_yields_table(TENOR)
-
-
     data['yields'] = prep_market_df(yields).to_html(escape=False, justify='center')
-
-    print(f'4{data["yields"]}')
 
     commodities_file = 'commodities.csv'
     if compare_timestamps(refresh_rate, commodities_file):
@@ -50,11 +36,6 @@ def all_markets_data(refresh_rate=REFRESH_RATE):
     else:
         commodities = get_commodities()
         data['commodities'] = commodities
-        #commodities.to_csv(commodities_file)
-
-    print(f'5{data["commodities"]}')
-
-
     return data
 
 
@@ -80,7 +61,6 @@ def get_indices_table():
                 print(f'error {e}')
 
     result.iloc[:, 1] = result.iloc[:, 1].astype(float).round(2)
-    #result.iloc[:, 2] = result.iloc[:, 2].apply(color_cell)
     return result
 
 

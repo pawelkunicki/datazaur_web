@@ -51,9 +51,6 @@ def messenger(request):
     return render(request, 'messenger/messenger.html', context)
 
 
-
-
-
 @login_required
 def chat(request, friend_id):
     context = {}
@@ -74,7 +71,6 @@ def chat(request, friend_id):
     return render(request, 'messenger/chat.html', context)
 
 
-
 def get_messages(request, friend_id):
     user = UserProfile.objects.get(user=request.user)
     recipient = UserProfile.objects.get(id=friend_id)
@@ -83,22 +79,17 @@ def get_messages(request, friend_id):
     msgs = sorted(
         chain(sent_msgs, received_msgs),
         key=lambda instance: instance['timestamp'])
-
     for msg in msgs:
         msg['sender_id'] = UserProfile.objects.get(id=msg['sender_id']).user.username
-
     return JsonResponse({'messages': msgs})
 
 
 def send(request):
-    print('send')
-    print(request.user)
-    print(request.POST)
     sender = UserProfile.objects.get(user=request.user)
     recipient = UserProfile.objects.get(id=request.POST['recipient_id'])
     message = request.POST['msg_text']
-    msg = Message.objects.create(sender=sender, recipient=recipient, content=message, timestamp=datetime.datetime.now())
-
+    date = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=1)))
+    msg = Message.objects.create(sender=sender, recipient=recipient, content=message, timestamp=date)
     return HttpResponse('sent')
 
 

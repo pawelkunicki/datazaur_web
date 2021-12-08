@@ -34,7 +34,6 @@ def connect_to_endpoint(params):
     return response.json()
 
 
-
 def tweet_count(query_params):
     json_response = connect_to_endpoint(query_params)
     print(json.dumps(json_response, indent=4, sort_keys=True))
@@ -44,7 +43,6 @@ def tweet_count(query_params):
     since = ccxt.Exchange.parse8601(df.loc[0, 'start'])
     df[['start', 'end']] = df[['start', 'end']].applymap(lambda x: datetime.datetime.strptime(x, '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d %H:%M'))
     return df, since
-
 
 
 def get_prices(ticker, exchange, interval, since):
@@ -73,3 +71,4 @@ def get_corr_matrix(df):
         for col2 in df.columns:
             matrix.loc[col, col2] = df[col].corr(df[col2]).__round__(3)
     return matrix
+
