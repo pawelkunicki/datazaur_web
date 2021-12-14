@@ -27,7 +27,7 @@ class Watchlist(models.Model):
     currency = models.ForeignKey('markets.Currency', blank=True, null=True, related_name='watchlist_currency',
                                  on_delete=models.CASCADE)
     default_source = models.ForeignKey('crypto.Exchange', on_delete=models.CASCADE, null=True, blank=True)
-    coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_coins')
+    coins = models.ManyToManyField('crypto.Cryptocurrency', blank=True, related_name='watchlist_watchlistcoins')
 
 
 

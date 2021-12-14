@@ -2,12 +2,6 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-#from watchlist.models import Watchlist
-#from portfolio.models import Portfolio
-# Create your models here.
-
-
-
 
 class Currency(models.Model):
     id = models.IntegerField(primary_key=True)

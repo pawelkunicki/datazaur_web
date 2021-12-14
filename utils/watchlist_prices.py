@@ -33,11 +33,13 @@ def watchlist_prices(watchlist):
         print(prices)
         if not prices:
             tickers = []
+        return prices
 
     except Exception as e:
         print(f'error {e}')
 
-    return prices
+
+
 
 
 

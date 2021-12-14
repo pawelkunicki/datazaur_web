@@ -1,13 +1,22 @@
 from django.shortcuts import render
+from django.views.generic import TemplateView
 from .forms import AddFXTicker
 from utils.market_data import *
 from website.models import UserProfile
 
 
-def markets(request):
-    context = all_markets_data(600)
-    context['currencies'] = settings.SORTED_CURRENCIES
-    return render(request, 'markets/markets.html', context)
+class MarketsView(TemplateView):
+    template_name = 'markets/markets.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = all_markets_data(600)
+        context['currencies'] = settings.SORTED_CURRENCIES
+        return context
+
 
 
 def forex(request):

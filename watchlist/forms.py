@@ -1,7 +1,7 @@
 from .models import Watchlist
 from django import forms
 from markets.models import Currency
-from crypto.models import Cryptocurrency, Exchange, ExchangeCoins
+from crypto.models import Cryptocurrency, Exchange
 
 
 class AddCoin(forms.Form):

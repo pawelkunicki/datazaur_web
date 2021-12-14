@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 
 
 class Cryptocurrency(models.Model):
@@ -22,7 +21,6 @@ class Cryptocurrency(models.Model):
 
 
 class Exchange(models.Model):
-
     class Grade(models.TextChoices):
         A = 'A', ('A')
         B = 'B', ('B')
@@ -35,13 +33,6 @@ class Exchange(models.Model):
     url = models.CharField(max_length=32, default='')
     volume = models.FloatField(default=0)
     coins = models.ManyToManyField('crypto.Cryptocurrency', related_name='exchange_coins', blank=True)
-
-#through='exchangecoins',  through_fields=('exchange', 'coin')
-
-
-class ExchangeCoins(models.Model):
-    exchange = models.ForeignKey(Exchange, on_delete=models.CASCADE, related_name='exchangecoins_exchange')
-    coin = models.ForeignKey(Cryptocurrency, on_delete=models.CASCADE, related_name='exchangecoins_coin')
 
 
 class Ticker(models.Model):

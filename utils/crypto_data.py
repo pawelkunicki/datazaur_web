@@ -38,7 +38,6 @@ def update_coin_prices():
         coin.save()
 
 
-
 @load_or_save('crypto.csv', 1200)
 def top_coins_by_mcap():
     url = f'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym={currency}&api_key={api_key}'
@@ -56,7 +55,6 @@ def top_coins_by_mcap():
     return prepare_df_display(df)
 
 
-
 @load_or_save('exchanges.csv', 86400)
 def exchanges_by_vol():
     url = f'https://min-api.cryptocompare.com/data/exchanges/general?api_key={api_key}&tsym={currency}'
@@ -72,6 +70,7 @@ def exchanges_by_vol():
     df.drop('Url', axis=1, inplace=True)
     df[vol_col] = list(map(lambda x: format(x, ','), df[vol_col]))
     return df
+
 
 def global_metrics():
     return 1

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import AddToPortfolio, ChangeCurrency, NewWatchlist, SetSource, AddCoin
 from .models import Watchlist, Portfolio, Amounts
 from markets.models import Currency
-from crypto.models import Cryptocurrency, Exchange, ExchangeCoins
+from crypto.models import Cryptocurrency, Exchange
 from utils.portfolio_value import get_portfolio_value
 from utils.watchlist_prices import watchlist_prices
 from website.models import UserProfile
@@ -21,8 +21,8 @@ def watchlist(request):
     watchlist = watchlists.first()
     coins = Cryptocurrency.objects.all()
     watchlist_coins = watchlist.coins.all()
-    prices = watchlist_prices(watchlist)
-    print(prices)
+    #prices = watchlist_prices(watchlist)
+
 
     context = {'watchlists': watchlists, 'currency': portfolio.currency, 'coins': coins, 'watchlist_coins': watchlist_coins,
                'new_watchlist': NewWatchlist(), 'change_currency': ChangeCurrency(), 'set_source': SetSource(),
@@ -35,7 +35,7 @@ def watchlist(request):
     elif request.method == 'POST':
         if 'add_coin' in str(request.POST):
             print('addin')
-            watchlist.coins.add(Cryptocurrency.objects.get(coin_id=request.POST['selected_coin']))
+            watchlist.coins.add(Cryptocurrency.objects.get(symbol=request.POST['selected_coin']))
             watchlist.save()
 
         elif 'delete' in str(request.POST):
@@ -80,10 +80,9 @@ def watchlist(request):
                 form_data = watchlist_form.cleaned_data
                 currency = Currency.objects.get(symbol=form_data['currency'])
                 if form_data['type'] == 'Watchlist':
-                    new_watchlist = Watchlist.objects.create(user=profile, currency=currency)
+                    Watchlist.objects.create(user=profile, currency=currency)
                 elif form_data['type'] == 'Portfolio':
-                    new_watchlist = Portfolio.objects.create(user=profile, currency=currency)
-                new_watchlist.save()
+                    Portfolio.objects.create(user=profile, currency=currency)
 
         elif 'source' in str(request.POST):
             print('set source')
@@ -92,7 +91,7 @@ def watchlist(request):
             if source_form.is_valid():
                 form_data = source_form.cleaned_data
                 exchange = Exchange.objects.get(id=form_data['source'])
-                watch_coin = WatchlistCoins.objects.get(id=form_data['coin'])
+                watch_coin = watchlist.coins.objects.get(id=form_data['coin'])
                 watch_coin.source = exchange
                 watch_coin.save()
                 print(f'source changed to {form_data["source"]}')

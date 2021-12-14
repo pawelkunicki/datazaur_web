@@ -1,22 +1,17 @@
-# Create your views here.
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
-from utils.crypto_data import *
 from .models import Cryptocurrency
+from utils.crypto_data import *
 from utils.compare_timestamps import compare_timestamps
 from utils.charts import Chart
 from utils.random_color import get_random_color
-from utils.crypto_data import exchanges_by_vol, top_coins_by_mcap
-
 from utils.other_data import *
 from utils.formatting import *
 from watchlist.models import Watchlist, Portfolio, Amounts
 from watchlist.forms import AddCoin
 from markets.models import Currency
-
 from website.models import UserProfile
 
-# Create your views here.
 
 CRYPTO_FILE = settings.CRYPTO_FILE
 EXCHANGES_FILE = settings.EXCHANGES_FILE
@@ -36,12 +31,12 @@ def crypto(request):
     context['table'] = table.to_html(escape=False, justify='center')
 
     if request.user.is_authenticated:
-        profile = UserProfile.objects.filter(user=request.user).first()
+        profile = UserProfile.objects.get(user=request.user)
         watchlist = Watchlist.objects.filter(user=profile).first()
-        coins = WatchlistCoins.objects.filter(watchlist=watchlist)
+        coins = watchlist.coins.all()
 
         print(coins)
-        context['watchlist_ids'] = [c.coin.symbol.lower() for c in coins]
+        context['watchlist_ids'] = [c.symbol.lower() for c in coins]
         print(context['watchlist_ids'])
         if profile.currency:
             context['currency'] = profile.currency.symbol

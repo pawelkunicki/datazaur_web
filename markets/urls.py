@@ -5,7 +5,7 @@ from . import views
 
 app_name = 'markets'
 urlpatterns = [
-    path('', views.markets, name='markets'),
+    path('', views.MarketsView.as_view(), name='markets'),
     path('crypto/', crypto, name='crypto'),
     path('indices/', views.indices, name='indices'),
     path('forex/', views.forex, name='forex'),

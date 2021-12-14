@@ -1,9 +1,16 @@
 import pandas as pd
-
 from django.shortcuts import render
+from django.views.generic import TemplateView
 from utils.fundamentals import FundamentalData
 from .forms import FindTicker
 # Create your views here.
+
+class FundamentalsView(TemplateView):
+    template_name = 'fundamentals/fundamentals.html'
+    form_class = FindTicker
+
+    def get(self, request, *args, **kwargs):
+        pass
 
 
 def fundamentals(request):

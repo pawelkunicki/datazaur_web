@@ -4,7 +4,7 @@ from django.conf import settings
 from .forms import TradeForm, FindQuote, ConnectForm
 from .models import SavedExchanges
 from website.models import UserProfile
-from crypto.models import Exchange, ExchangeCoins
+from crypto.models import Exchange
 from utils.charts import Chart
 from utils.count_tweets import *
 from utils.random_color import *
