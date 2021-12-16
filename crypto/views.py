@@ -108,7 +108,7 @@ def dominance(request):
     else:
         currency = settings.DEFAULT_CURRENCY
     top_n_choices = [10, 20, 50, 100]
-    mcap_col = f'Market cap ({currency})'
+    mcap_col = f'Market cap (USD)'
 
     if request.method == 'GET':
         top_n_coins = int(request.GET['top_n_coins']) if 'top_n_coins' in str(request.GET) else 20
